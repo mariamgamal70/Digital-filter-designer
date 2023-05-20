@@ -23,27 +23,27 @@
     </header>
     <div class="d-flex justify-content-evenly">
     <div class="d-flex flex-column justify-content-center ">
-        <div style="position: relative; left: 25px;"><canvas id="unitcirclecanva" width="300" height="300" style="border: 1px solid #d3d3d388" ></canvas></div>
+        <div style="position: relative; left: 25px;" id="canvascontainer"><canvas id="unitcirclecanva" width="300" height="300" style="border: 1px solid #d3d3d388" ></canvas></div>
         <br>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="btnradio1">Zero</label>
+            <input type="radio" class="btn-check" name="btnradio" id="zero" autocomplete="off" >
+            <label class="btn btn-outline-primary" for="zero">Zero</label>
         
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btnradio2">Pole</label>
+            <input type="radio" class="btn-check" name="btnradio" id="pole" autocomplete="off">
+            <label class="btn btn-outline-primary" for="pole">Pole</label>
         </div>
         <br>
         <div>
-            <button type="button" class="btn btn-outline-primary w-100">Add Conjugate</button>
+            <button type="button" class="btn btn-outline-primary w-100" id="conjugate">Add Conjugate</button>
         </div>
         <br>
         <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btncheck1">Delete</label>
+            <input type="checkbox" class="btn-check" id="delete" autocomplete="off">
+            <label class="btn btn-outline-primary" for="delete">Delete</label>
         </div>
         <br>
         <div>
-            <button type="button" class="btn btn-outline-primary w-100">Clear All</button>
+            <button type="button" class="btn btn-outline-primary w-100" id="clearall">Clear All</button>
         </div>
         <div class="my-3">
             <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
@@ -94,6 +94,7 @@
         </div>
     </div>
 </div>
+    <script src="/static/canvas.js"></script>
     <script src="/static/app.js"></script>
 </body>
 </html>
