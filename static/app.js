@@ -3,25 +3,24 @@ const phaseGraph = document.getElementById("phase");
 const inputSignalGraph = document.getElementById("inputsignal");
 const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
-const uploadSignal=document.getElementById("uploadsignal")
-const canvasContainer = document.getElementById("canvascontainer");
-let zeros = [];
-let poles = [];
-let time=50;
+const uploadSignal = document.getElementById("uploadsignal")
+let time = 50;
+// let minTick;
+// let maxTick;
 
-let unitCircleCanvas = document.getElementById("unitcirclecanva");
-let context = unitCircleCanvas.getContext("2d");
-    context.beginPath();
-    context.arc(150, 150, 100, 0, 2 * Math.PI);
-    context.stroke();
-    context.moveTo(0, 150);
-    context.lineTo(300, 150);
-    context.stroke();
-    context.moveTo(150, 0);
-    context.lineTo(150, 300);
-    context.strokeStyle = "#000000";
-    context.stroke();
-    context.closePath();
+var c = document.getElementById("unitcirclecanva");
+var context = c.getContext("2d");
+context.beginPath();
+context.arc(150, 150, 100, 0, 2 * Math.PI);
+context.stroke();
+context.moveTo(0, 150);
+context.lineTo(300, 150);
+context.stroke();
+context.moveTo(150, 0);
+context.lineTo(150, 300);
+context.strokeStyle = "#dd3444";
+context.stroke();
+context.closePath();
 
 window.addEventListener("load", function () {
   createPlot(magnitudeGraph);
@@ -166,138 +165,3 @@ uploadSignal.addEventListener("change", (event) => {
     convertCsvToTrace(data);
   };
 });
-
-const deleteButton = document.getElementById("delete");
-const addZeroButton = document.getElementById("zero");
-const addPoleButton = document.getElementById("pole");
-const conjugateButton = document.getElementById("conjugate");
-const clearAllButton = document.getElementById("clearall");
-
-unitCircleCanvas.addEventListener("click", (event) => {
-    const rect = unitCircleCanvas.getBoundingClientRect();
-    //client is distance from start of viewport till point clicked in the div
-    //rect is the distance from the viewport till the start of the div
-    //the difference between them is the distance from the start of div till point clicked
-    const x = event.clientX - rect.left;
-    console.log("x", x, "clientx", event.clientX, "rectleft", rect.left);
-    const y = event.clientY - rect.top;
-    console.log("y", x, "clienty", event.clientY, "recttop", rect.top);
-  if (addZeroButton.checked) {
-      if (conjugateButton.checked) {
-        createZero(x, y);
-        createZero(x, 300 - y);
-      } else {
-        createZero(x, y);
-      }
-  } else if (addPoleButton.checked) {
-      if (conjugateButton.checked) {
-        createPole(x, y);
-        createPole(x, 300 - y);
-      } else {
-        createPole(x, y);
-      }
-  }
-});
-
-function createZero(x, y) {
-  const zero = document.createElement("div");
-  zero.className = "zero";
-  zero.style.left = x-5 + "px";
-  zero.style.top = y-5 + "px";
-  canvasContainer.appendChild(zero);
-  zeros.push(zero);
-//   dragElement(zero);
-}
-
-function createPole(x, y) {
-  const pole = document.createElement("div");
-  pole.className = "pole";
-  pole.style.left = x - 5 + "px";
-  pole.style.top = y - 5 + "px";
-  canvasContainer.appendChild(pole);
-  poles.push(pole);
-//   dragElement(pole);
-}
-
-// function dragElement(element) {
-//   let pos1 = 0,
-//     pos2 = 0,
-//     pos3 = 0,
-//     pos4 = 0;
-
-//   element.onmousedown = dragMouseDown;
-
-//   function dragMouseDown(e) {
-//     e = e || window.event;
-//     e.preventDefault();
-//     pos3 = e.clientX;
-//     pos4 = e.clientY;
-//     document.onmouseup = closeDragElement;
-//     document.onmousemove = elementDrag;
-//   }
-
-//   function elementDrag(e) {
-//     e = e || window.event;
-//     e.preventDefault();
-//     pos1 = pos3 - e.clientX;
-//     pos2 = pos4 - e.clientY;
-//     pos3 = e.clientX;
-//     pos4 = e.clientY;
-//     element.style.top = element.offsetTop - pos2 + "px";
-//     element.style.left = element.offsetLeft - pos1 + "px";
-//   }
-
-//   function closeDragElement() {
-//     document.onmouseup = null;
-//     document.onmousemove = null;
-//   }
-// }
-
-// function deleteZero(zero) {
-//   zeroContainer.removeChild(zero);
-//   zeros = zeros.filter((item) => item !== zero);
-// }
-
-// function deletePole(pole) {
-//   zeroContainer.removeChild(pole);
-//   poles = poles.filter((item) => item !== pole);
-// }
-
-// function clearZeros() {
-//   zeros.forEach((zero) => zeroContainer.removeChild(zero));
-//   zeros = [];
-// }
-
-// function clearPoles() {
-//   poles.forEach((pole) => zeroContainer.removeChild(pole));
-//   poles = [];
-// }
-
-// function clearAll() {
-//   clearZeros();
-//   clearPoles();
-// }
-
-// clearZerosButton.addEventListener("click", clearZeros);
-// clearPolesButton.addEventListener("click", clearPoles);
-// clearAllButton.addEventListener("click", clearAll);
-
-// unitCircleCanvas.addEventListener("click", (e) => {
-//   const rect = unitCircleCanvas.getBoundingClientRect();
-//   const x = e.clientX - rect.left;
-//   const y = e.clientY - rect.top;
-//   if (conjugateCheckbox.checked) {
-//     createZero(x, y);
-//     createZero(x, 300 - y);
-//   } else {
-//     createZero(x, y);
-//   }
-// });
-
-// zeroContainer.addEventListener("click", (e) => {
-//   if (e.target.classList.contains("zero")) {
-//     deleteZero(e.target);
-//   } else if (e.target.classList.contains("pole")) {
-//     deletePole(e.target);
-//   }
-// });
