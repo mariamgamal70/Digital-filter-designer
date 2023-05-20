@@ -5,8 +5,7 @@ const conjugateButton = document.getElementById("conjugate");
 const clearAllButton = document.getElementById("clearall");
 const canvasContainer = document.getElementById("canvascontainer");
 let unitCircleCanvas = document.getElementById("unitcirclecanva");
-let lastAddedElement = null;
-
+let lastAddedElement=null;
 let zeros = [];
 let poles = [];
 
@@ -29,26 +28,36 @@ unitCircleCanvas.addEventListener("click", (event) => {
   //the difference between them is the distance from the start of div till point clicked
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
+  console.log("x", x, "event.clientX", event.clientX, "rect.left", rect.left);
+  console.log("y", y, "event.clientY", event.clientX, "rect.top", rect.top);
   if (addZeroButton.checked) {
     createZero(x, y);
-    lastAddedElement = zeros[zeros.length - 1];
-    conjugateButton.addEventListener("click", () => {
-      const rectelement = lastAddedElement.getBoundingClientRect();
-      const xelement = rectelement.left;
-      const yelement = rectelement.top;
-      createZero(xelement, yelement);
-    });
+    lastAddedElement = {element: zeros[zeros.length - 1], x:x,y:y};
+    conjugateButton.removeEventListener("click", conjugatePoleHandler);
+    conjugateButton.addEventListener("click", conjugateZeroHandler);
   } else if (addPoleButton.checked) {
     createPole(x, y);
-    lastAddedElement = poles[poles.length - 1];
-    conjugateButton.addEventListener("click", () => {
-      const rectelement = lastAddedElement.getBoundingClientRect();
-      const xelement = rectelement.left;
-      const yelement = rectelement.top;
-      createPole(xelement, yelement);
-    });
+    lastAddedElement = { element: poles[poles.length - 1], x: x, y: y };
+    conjugateButton.removeEventListener("click", conjugateZeroHandler);
+    conjugateButton.addEventListener("click", conjugatePoleHandler);
   }
 });
+
+function conjugatePoleHandler(){
+    const rectelement = lastAddedElement.element.getBoundingClientRect();
+    const xelement = rectelement.left;
+    const yelement = rectelement.top;
+    console.log("pole", "xelement", xelement, "yelement", yelement);
+    createPole(lastAddedElement.x, 300 - lastAddedElement.y);
+}
+
+function conjugateZeroHandler() {
+    const rectelement = lastAddedElement.element.getBoundingClientRect();
+    const xelement = rectelement.left;
+    const yelement = rectelement.top;
+    console.log("pole", "xelement", xelement, "yelement", yelement);
+    createZero(lastAddedElement.x, 300 - lastAddedElement.y);
+}
 
 function createZero(x, y) {
   const zero = document.createElement("div");
