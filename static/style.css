@@ -46,3 +46,19 @@
 div:after {
     transform: rotate(-45deg);
 }
+
+#selectedItemsList {
+    list-style-type: none;
+    padding-left: 0;
+    background-color: #0b0d0e;
+  }
+  
+  #selectedItemsList li {
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  #selectedItemsList li.active {
+    background-color: #212529;
+  }
+  
