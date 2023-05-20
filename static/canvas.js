@@ -43,6 +43,8 @@ unitCircleCanvas.addEventListener("click", (event) => {
   }
 });
 
+clearAllButton.addEventListener("click", clearAll);
+
 function conjugatePoleHandler(){
     const rectelement = lastAddedElement.element.getBoundingClientRect();
     const xelement = rectelement.left;
@@ -140,4 +142,3 @@ function clearAll() {
   clearZeros();
   clearPoles();
 }
-clearAllButton.addEventListener("click", clearAll);
