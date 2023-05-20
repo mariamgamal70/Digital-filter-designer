@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,87 +14,107 @@
     <script src="/static/plotly-2.18.2.min.js" charset="utf-8"></script>
     <title>Digital Filter Designer</title>
 </head>
-<body>
-    <header class="bg-primary mb-2 text-light p-1 d-flex justify-content-between">
+
+<body style="background-color: black;">
+    <header class="bg-danger mb-2 text-light p-1 d-flex flex-wrap align-items-center justify-content-between">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <h4 class="d-inline">Digital Filter Designer</h4>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            All-pass filters
-        </button>
-    </header>
-    <div class="d-flex justify-content-evenly">
-    <div class="d-flex flex-column justify-content-center ">
-        <div style="position: relative; left: 25px;"><canvas id="unitcirclecanva" width="300" height="300" style="border: 1px solid #d3d3d388" ></canvas></div>
-        <br>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="btnradio1">Zero</label>
-        
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btnradio2">Pole</label>
-        </div>
-        <br>
-        <div>
-            <button type="button" class="btn btn-outline-primary w-100">Add Conjugate</button>
-        </div>
-        <br>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btncheck1">Delete</label>
-        </div>
-        <br>
-        <div>
-            <button type="button" class="btn btn-outline-primary w-100">Clear All</button>
-        </div>
         <div class="my-3">
             <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
-            <input class="form-control" type="file" id="uploadsignal">
+            <input class="form-control custom-file-input" type="file" id="uploadsignal">
         </div>
-</div>
+    </header>
+    <div class="d-flex flex-wrap justify-content-center mt-4">
+        <div class="d-flex flex-column justify-content-center align-items-center me-4">
+            <div style="position: relative;"><canvas id="unitcirclecanva" width="300" height="300"
+                    style="border: 1px solid #dd3444"></canvas></div>
+            <br>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                <label class="btn btn-outline-danger" for="btnradio1" style="width: 100px;">Zero</label>
 
-<div class="d-flex flex-column">
-    <div class="border border-primary rounded mb-1">
-        <div id="magnitude"  style="width:500px;height:300px;"></div>
-    </div>
-    <div class="border border-primary rounded" >
-        <div id="phase" style="width:500px;height: 300px;"></div>
-    </div>
-</div>
-<div>
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                <label class="btn btn-outline-danger" for="btnradio2" style="width: 100px;">Pole</label>
 
-    <div class="border border-primary  rounded mb-1">
-        <div id="inputsignal" style="width:500px;height: 300px;"></div>
-    </div>
-    <div class="border border-primary rounded" >
-        <div id="outputsignal" style="width:500px;height: 300px;"></div>
-    </div>
-    <br>
-    <div class='d-inline-block w-100'>
-        <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
-        <span id="rangevalue">0%</span>
-    </div>
-    <br><br>
-</div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">All-pass filters</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-danger dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Clear
+                    </button>
+                    <ul class="dropdown-menu" style="background-color: black;">
+                        <li>
+                            <input type="radio" class="dropdown-item btn-check" name="btnradio" id="btnradio3"
+                                autocomplete="off">
+                            <label class="dropdown-item text-light" for="btnradio3">Zeros</label>
+                        </li>
+                        <li>
+                            <input type="radio" class="dropdown-item btn-check" name="btnradio" id="btnradio3"
+                                autocomplete="off">
+                            <label class="dropdown-item text-light" for="btnradio3">Poles</label>
+                        </li>
+                        <li>
+                            <input type="radio" class="dropdown-item btn-check" name="btnradio" id="btnradio3"
+                                autocomplete="off">
+                            <label class="dropdown-item text-light" for="btnradio3">All</label>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="modal-body">
-                ...
+            <br>
+            <div class='d-inline-block w-100'>
+                <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
+                <span id="rangevalue">0%</span>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+            <div class="d-flex flex-row align-items-center">
+                <button type="button" class="btn btn-outline-danger me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  All-pass filters
+                </button>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                  <label class="form-check-label text-danger" for="flexSwitchCheckDefault">Conjugate</label>
+                </div>
+             </div>
+        </div>
+
+        <div class="d-flex flex-column">
+            <div class="border border-danger rounded mb-1">
+                <div id="magnitude" style="width:500px;height:300px;"></div>
+            </div>
+            <div class="border border-danger rounded">
+                <div id="phase" style="width:500px;height: 300px;"></div>
+            </div>
+        </div>
+        <div>
+
+            <div class="border border-danger  rounded mb-1">
+                <div id="inputsignal" style="width:500px;height: 300px;"></div>
+            </div>
+            <div class="border border-danger rounded">
+                <div id="outputsignal" style="width:500px;height: 300px;"></div>
+            </div>
+            <br>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content text-light" style="background-color: black;">
+                <div class="modal-header td">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">All-pass filters</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger">Apply</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <script src="/static/app.js"></script>
 </body>
+
 </html>

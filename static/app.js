@@ -3,126 +3,143 @@ const phaseGraph = document.getElementById("phase");
 const inputSignalGraph = document.getElementById("inputsignal");
 const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
-const uploadSignal=document.getElementById("uploadsignal")
-let time=50;
+const uploadSignal = document.getElementById("uploadsignal")
+let time = 50;
 // let minTick;
 // let maxTick;
 
 var c = document.getElementById("unitcirclecanva");
 var context = c.getContext("2d");
-    context.beginPath();
-    context.arc(150, 150, 100, 0, 2 * Math.PI);
-    context.stroke();
-    context.moveTo(0, 150);
-    context.lineTo(300, 150);
-    context.stroke();
-    context.moveTo(150, 0);
-    context.lineTo(150, 300);
-    context.strokeStyle = "#000000";
-    context.stroke();
-    context.closePath();
+context.beginPath();
+context.arc(150, 150, 100, 0, 2 * Math.PI);
+context.stroke();
+context.moveTo(0, 150);
+context.lineTo(300, 150);
+context.stroke();
+context.moveTo(150, 0);
+context.lineTo(150, 300);
+context.strokeStyle = "#dd3444";
+context.stroke();
+context.closePath();
 
-    window.addEventListener("load", function () {
-      createPlot(magnitudeGraph);
-      Plotly.relayout(magnitudeGraph, { title: "Magnitude" });
-      createPlot(phaseGraph);
-      Plotly.relayout(phaseGraph, { title: "Phase" });
-      createPlot(inputSignalGraph);
-      Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
-      createPlot(outputSignalGraph);
-      Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
-    });
+window.addEventListener("load", function () {
+  createPlot(magnitudeGraph);
+  Plotly.relayout(magnitudeGraph, { title: "Magnitude" });
+  createPlot(phaseGraph);
+  Plotly.relayout(phaseGraph, { title: "Phase" });
+  createPlot(inputSignalGraph);
+  Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
+  createPlot(outputSignalGraph);
+  Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
+});
 
-    function createPlot(graphElement) {
-      let layout = {
-        margin: { l: 55, r: 50, t: 50, b: 40 },
-        xaxis: {
-          title: "Time (sec)",
-          zoom: 1000,
+function createPlot(graphElement) {
+  let layout = {
+    margin: { l: 55, r: 50, t: 50, b: 40 },
+    xaxis: {
+      title: "Time (sec)",
+      zoom: 1000,
+      titlefont: {
+        color: " #dd3444",     // Set x-axis title color to red
+      },
+      tickfont: {
+        color: " #dd3444",     // Set x-axis tick labels color to red
+      },
+    },
+    yaxis: {
+      title: "Amplitude",
+      titlefont: {
+        color: " #dd3444",     // Set x-axis title color to red
+      },
+      tickfont: {
+        color: " #dd3444",     // Set x-axis tick labels color to red
+      },
+    },
+    showlegend: false,
+    plot_bgcolor: "black",     // Set plot background color to black
+    paper_bgcolor: "black",    // Set paper background color to black
+    font: {
+      color: "white",          // Set font color to white
+    },
+  };
+  Plotly.newPlot(graphElement, [], layout, {
+    displaylogo: false,
+    // Enable responsive sizing of the plot
+    responsive: true,
+    // Enable automatic resizing of the plot to fit its container element
+    autosize: true,
+  });
+}
+
+function plotSignal(data, graphElement) {
+  //if first channel set the minTick=0 and maxTick=4 that is going to change to view plot as if realtime
+  let plottingPointIndex = 0;
+  let minTick = 0;
+  let maxTick = 4;
+  //set plottingPointIndex=0 to increment to go through all the points in signal
+  let plottingInterval;
+  let time;
+  Plotly.relayout(graphElement, {
+    "xaxis.fixedrange": false,
+    dragmode: "pan",
+  });
+  //function that plots point by point and change the time interval accordingly to plot dynamically
+  function actualPlotting() {
+    if (plottingPointIndex < data.x.length) {
+      Plotly.extendTraces(
+        graphElement,
+        {
+          x: [[data.x[plottingPointIndex]]],
+          y: [[data.y[plottingPointIndex]]],
         },
-        yaxis: {
-          title: "Amplitude",
-        },
-        showlegend: false,
-      };
-      Plotly.newPlot(graphElement,[], layout, {
-        displaylogo: false,
-        // Enable responsive sizing of the plot
-        responsive: true,
-        // Enable automatic resizing of the plot to fit its container element
-        autosize: true,
-      });
-    }
-
-    function plotSignal(data, graphElement) {
-      //if first channel set the minTick=0 and maxTick=4 that is going to change to view plot as if realtime
-        let plottingPointIndex = 0;
-        let minTick = 0;
-        let maxTick = 4;
-      //set plottingPointIndex=0 to increment to go through all the points in signal
-      let plottingInterval;
-      let time;
-      Plotly.relayout(graphElement, {
-        "xaxis.fixedrange": false,
-        dragmode: "pan",
-      });
-      //function that plots point by point and change the time interval accordingly to plot dynamically
-      function actualPlotting() {
-          if (plottingPointIndex < data.x.length) {
-            Plotly.extendTraces(
-              graphElement,
-              {
-                x: [[data.x[plottingPointIndex]]],
-                y: [[data.y[plottingPointIndex]]],
-              },
-              [0]
-            );
-            plottingPointIndex++;
-            //if condition used to change the time interval dynamically
-            if (data.x[plottingPointIndex] > maxTick) {
-              minTick = maxTick;
-              maxTick += 4;
-              Plotly.relayout(graphElement, {
-                "xaxis.range": [minTick, maxTick],
-                "xaxis.tickmode": "linear",
-                "xaxis.dtick": 1,
-              });
-            }
-          } else {
-            clearInterval(plottingInterval);
-          }
+        [0]
+      );
+      plottingPointIndex++;
+      //if condition used to change the time interval dynamically
+      if (data.x[plottingPointIndex] > maxTick) {
+        minTick = maxTick;
+        maxTick += 4;
+        Plotly.relayout(graphElement, {
+          "xaxis.range": [minTick, maxTick],
+          "xaxis.tickmode": "linear",
+          "xaxis.dtick": 1,
+        });
       }
-      //function that starts plotting asynchronously
-      function startInterval() {
-        if (plottingInterval) {
-          clearInterval(plottingInterval);
-        }
-        plottingInterval = setInterval(actualPlotting, time);
-      }
-      //start plotting
-      startInterval();
-
-      //eventlistener for cine speed sliders
-      graphSpeed.addEventListener("change", () => {
-        time = parseInt(graphSpeed.value);
-        document.getElementById("rangevalue").innerHTML = `${graphSpeed.value}%`;
-        //restart plottingInterval in order to apply speed changes
-        startInterval();
-      });
-      
+    } else {
+      clearInterval(plottingInterval);
     }
-
-    function convertCsvToTrace(csvdata) {
-      // Extract data from the CSV data
-      let x = csvdata.map((arrRow) => arrRow.col1);
-      let y = csvdata.map((arrRow) => arrRow.col2);
-      let uploadedSignal = {x: x, y: y };
-      // If there are no existing signals, add the uploaded signal as a trace to the plot else add the uploaded signal as a component to the plot
-      Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
-      plotSignal(uploadedSignal, inputSignalGraph);
+  }
+  //function that starts plotting asynchronously
+  function startInterval() {
+    if (plottingInterval) {
+      clearInterval(plottingInterval);
     }
+    plottingInterval = setInterval(actualPlotting, time);
+  }
+  //start plotting
+  startInterval();
 
-    // event listener to the file upload input element to trigger when a file is selected
+  //eventlistener for cine speed sliders
+  graphSpeed.addEventListener("change", () => {
+    time = parseInt(graphSpeed.value);
+    document.getElementById("rangevalue").innerHTML = `${graphSpeed.value}%`;
+    //restart plottingInterval in order to apply speed changes
+    startInterval();
+  });
+
+}
+
+function convertCsvToTrace(csvdata) {
+  // Extract data from the CSV data
+  let x = csvdata.map((arrRow) => arrRow.col1);
+  let y = csvdata.map((arrRow) => arrRow.col2);
+  let uploadedSignal = { x: x, y: y };
+  // If there are no existing signals, add the uploaded signal as a trace to the plot else add the uploaded signal as a component to the plot
+  Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
+  plotSignal(uploadedSignal, inputSignalGraph);
+}
+
+// event listener to the file upload input element to trigger when a file is selected
 uploadSignal.addEventListener("change", (event) => {
   // Set the isUploaded flag to true when a file is selected
   isUploaded = true;
