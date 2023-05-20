@@ -1,13 +1,16 @@
 .custom-file-input::file-selector-button {
     background-color: black;
     color: white;
-    border-color: #dd3444;
+    border-color: white;
 }
 
  /* Custom styles for checked state */
  .form-check-input:checked {
   background-color: #dd3444;
   border-color: #dd3444;
+}
+.dropdown-wide {
+  width: 330px; 
 }
  
 .zero

@@ -19,7 +19,7 @@ context.lineTo(300, 150);
 context.stroke();
 context.moveTo(150, 0);
 context.lineTo(150, 300);
-context.strokeStyle = "#000000";
+context.strokeStyle = "#dd3444";
 context.stroke();
 context.closePath();
 
