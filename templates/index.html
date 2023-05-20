@@ -23,7 +23,7 @@
     </header>
     <div class="d-flex justify-content-evenly">
     <div class="d-flex flex-column justify-content-center ">
-        <div style="position: relative; left: 25px;" id="canvascontainer"><canvas id="unitcirclecanva" width="300" height="300" style="border: 1px solid #d3d3d388" ></canvas></div>
+        <div style="position: relative; left: 25px;" id="canvascontainer" ><canvas id="unitcirclecanva" width="300" height="300" style="border: 1px solid #d3d3d388" class="border rounded-circle" ></canvas></div>
         <br>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" name="btnradio" id="zero" autocomplete="off" >
@@ -76,24 +76,45 @@
 </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">All-pass filters</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-dark" >
+                <div class="modal-header td">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">All-pass filters</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle me-4 dropdown-wide" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Select desired All-pass
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-light">
+                            <li><a class="dropdown-item" href="#">1+0.5j</a></li>
+                            <li><a class="dropdown-item" href="#">1+2j</a></li>
+                            <li><a class="dropdown-item customize-option" href="#">Customize</a></li>
+                        </ul>
+                        <button type="button" class="btn btn-outline-primary add-button">Add</button>
+                        <button type="button" class="btn btn-outline-primary delete-button">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                    <div class="input-group mt-2">
+                        <input type="text" class="form-control custom-input-container" id="customInputContainer"
+                            placeholder="Enter desired value" style="display: none;">
+                    </div>
+                    <ul id="selectedItemsList" class="mt-4"></ul>
+                </div>
+    
+    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Apply</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <script src="/static/canvas.js"></script>
     <script src="/static/app.js"></script>
 </body>

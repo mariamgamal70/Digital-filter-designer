@@ -12,7 +12,7 @@ let poles = [];
 
 let context = unitCircleCanvas.getContext("2d");
 context.beginPath();
-context.arc(150, 150, 100, 0, 2 * Math.PI);
+context.arc(150, 150, 150, 0, 2 * Math.PI);
 context.stroke();
 context.moveTo(0, 150);
 context.lineTo(300, 150);
