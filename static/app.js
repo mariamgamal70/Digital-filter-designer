@@ -8,9 +8,17 @@ let time = 50;
 
 window.addEventListener("load", function () {
   createPlot(magnitudeGraph);
-  Plotly.relayout(magnitudeGraph, { title: "Magnitude" });
+  Plotly.relayout(magnitudeGraph, {
+    title: "Magnitude",
+    "xaxis.title": "Frequency (Hz)",
+    "yaxis.title": "Amplitude (dB)",
+  });
   createPlot(phaseGraph);
-  Plotly.relayout(phaseGraph, { title: "Phase" });
+  Plotly.relayout(phaseGraph, { 
+    title: "Phase",
+    "xaxis.title": "Frequency (Hz)",
+    "yaxis.title": "Angle (radians)",
+   });
   createPlot(inputSignalGraph);
   Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
   createPlot(outputSignalGraph);
@@ -39,6 +47,7 @@ function createPlot(graphElement) {
     autosize: true,
   });
 }
+
 
 function plotSignal(data, graphElement) {
   //if first channel set the minTick=0 and maxTick=4 that is going to change to view plot as if realtime
@@ -161,53 +170,3 @@ uploadSignal.addEventListener("change", (event) => {
 //     plotPhase();
 //   });
 // });
-
-// Function to plot the magnitude response
-function plotMagnitude() {
-  var data = [{
-    x: filter.getFrequencyResponse().frequencies,
-    y: filter.getFrequencyResponse().magnitude,
-    type: 'scatter',
-    mode: 'lines',
-    line: {
-      color: 'blue'
-    }
-  }];
-
-  var layout = {
-    title: 'Magnitude Response',
-    xaxis: {
-      title: 'Frequency (Hz)'
-    },
-    yaxis: {
-      title: 'Magnitude (dB)'
-    }
-  };
-
-  Plotly.newPlot('magnitude', data, layout);
-}
-
-// Function to plot the phase response
-function plotPhase() {
-  var data = [{
-    x: filter.getFrequencyResponse().frequencies,
-    y: filter.getFrequencyResponse().phase,
-    type: 'scatter',
-    mode: 'lines',
-    line: {
-      color: 'blue'
-    }
-  }];
-
-  var layout = {
-    title: 'Phase Response',
-    xaxis: {
-      title: 'Frequency (Hz)'
-    },
-    yaxis: {
-      title: 'Phase (degrees)'
-    }
-  };
-
-  Plotly.newPlot('phase', data, layout);
-}

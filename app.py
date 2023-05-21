@@ -24,15 +24,23 @@ def getMagnitudeAndPhase():
     real_poles = request.form.getlist('realPoles')
     img_zeros = request.form.getlist('imgZeros')
     img_poles = request.form.getlist('imgPoles')
+    real_poles_values = np.array([float(value) for element in real_poles for value in element.split(',')])
+    real_zeros_values = np.array([float(value) for element in real_zeros for value in element.split(',')])
+    img_zeros_values = np.array([float(value) for element in img_zeros for value in element.split(',')])
+    img_poles_values = np.array([float(value) for element in img_poles for value in element.split(',')])
 
+    print("real_zeros",real_poles_values)
+    print("real_poles",real_zeros_values)
+    print("img_zeros",img_zeros_values)
+    print("img_poles",img_poles_values)
     zeros_complex=[]
     poles_complex=[]
-    for real, img in zip(real_poles, img_poles):
-        if real and img:
-            zeros_complex.append(complex(float(real), float(img)))
-    for real, img in zip(real_zeros, img_zeros):
+    for real, img in zip(real_poles_values, img_poles_values):
         if real and img:
             poles_complex.append(complex(float(real), float(img)))
+    for real, img in zip(real_zeros_values, img_zeros_values):
+        if real and img:
+            zeros_complex.append(complex(float(real), float(img)))
 
     # Calculate the frequency response using the zeros and poles
     freq, complex_gain = signal.freqz_zpk(zeros_complex, poles_complex, 1)

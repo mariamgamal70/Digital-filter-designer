@@ -154,8 +154,8 @@ function clearAll() {
 function convertToPolarCoordinates() {
   const shapes = [...zeros, ...poles]; // Combine zeros and poles into a single array
   for (let shape of shapes) {
-    const x =(shape.x-150)/150; // Calculate the center x-coordinate of the shape
-    const y = (shape.y - 150)/150; // Calculate the center y-coordinate of the shape
+    const x =(shape.x - 150)/150; // Calculate the center x-coordinate of the shape
+    const y = (150-shape.y )/150; // Calculate the center y-coordinate of the shape
     // Convert the x and y coordinates to polar coordinates
     const radius = Math.sqrt((x) ** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
     const angle = Math.atan2(y, x); // Angle in radians
