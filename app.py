@@ -18,8 +18,8 @@ def polar_to_rectangular(radius, angle):
 def home():
     return render_template('index.html')
 
-@app.route('/getMagnitudeAndPhase', methods=['GET', 'POST'])
-def getMagnitudeAndPhase():
+# @app.route('/getMagnitudeAndPhase', methods=['GET', 'POST'])
+# def getMagnitudeAndPhase():
 
 
 if __name__ == '__main__':

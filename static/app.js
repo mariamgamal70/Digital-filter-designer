@@ -2,6 +2,8 @@ const magnitudeGraph = document.getElementById("magnitude");
 const phaseGraph = document.getElementById("phase");
 const inputSignalGraph = document.getElementById("inputsignal");
 const outputSignalGraph = document.getElementById("outputsignal");
+const allPassResponse = document.getElementById("All-Pass response");
+const OrignialPhase = document.getElementById("originalphase");
 const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
 let time = 50;
@@ -15,6 +17,10 @@ window.addEventListener("load", function () {
   Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
   createPlot(outputSignalGraph);
   Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
+  createPlot(allPassResponse);
+  Plotly.relayout(allPassResponse, { title: "All-Pass response"});
+  createPlot(OrignialPhase);
+  Plotly.relayout(OrignialPhase, { title: "original phase" });
 });
 
 function createPlot(graphElement) {
@@ -134,3 +140,13 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
+document.getElementById("dropdown").addEventListener("change", function() {
+  var selectedOption = this.value;
+  var customInputContainer = document.getElementById("customInputContainer");
+
+  if (selectedOption === "custom") {
+    customInputContainer.style.display = "block";
+  } else {
+    customInputContainer.style.display = "none";
+  }
+});
