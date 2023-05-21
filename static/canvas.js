@@ -161,14 +161,44 @@ function convertToPolarCoordinates() {
   }
 }
 
-function getFrequencyResponse(){
-  var formData = new FormData();
-  formData.append("zeros", zeros);
-  formData.append("poles", poles);
-   fetch("/getMagnitudeAndPhase", {
-     method: "POST",
-     body: formData,
-   })
-     .then((response) => response.json())
-     .then((result) => {});
+function getFrequencyResponse() {
+  const formData = new FormData();
+  formData.append("zeros", JSON.stringify(zeros));
+  formData.append("poles", JSON.stringify(poles));
+
+  fetch("/getMagnitudeAndPhase", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Update the plot with the magnitude and phase data
+      const magTrace = {
+        x: data.frequency,
+        y: data.magnitude,
+        type: "scatter",
+        name: "Magnitude",
+      };
+      const phaseTrace = {
+        x: data.frequency,
+        y: data.phase,
+        type: "scatter",
+        name: "Phase",
+      };
+      const layout = {
+        title: "Frequency Response",
+        xaxis: { title: "Frequency (Hz)" },
+        yaxis: { title: "Magnitude/Phase (dB/rad)" },
+      };
+      Plotly.newPlot("magnitude", [magTrace, phaseTrace], layout);
+    })
+    .catch((error) => {
+      // Handle errors, e.g. display an error message to the user
+      console.error("Error fetching frequency response:", error);
+    });
 }
