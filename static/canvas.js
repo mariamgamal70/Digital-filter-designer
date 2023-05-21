@@ -177,25 +177,23 @@ function getFrequencyResponse() {
       return response.json();
     })
     .then((data) => {
-      // Update the plot with the magnitude and phase data
+      // Update the magnitude plot with the magnitude data
       const magTrace = {
-        x: data.frequency,
-        y: data.magnitude,
+        x: data.magnitude.frequency,
+        y: data.magnitude.magnitude,
         type: "scatter",
         name: "Magnitude",
       };
+      Plotly.newPlot(magnitudeGraph, [magTrace], { title: "Magnitude" });
+
+      // Update the phase plot with the phase data
       const phaseTrace = {
-        x: data.frequency,
-        y: data.phase,
+        x: data.phase.frequency,
+        y: data.phase.phase,
         type: "scatter",
         name: "Phase",
       };
-      const layout = {
-        title: "Frequency Response",
-        xaxis: { title: "Frequency (Hz)" },
-        yaxis: { title: "Magnitude/Phase (dB/rad)" },
-      };
-      Plotly.newPlot("magnitude", [magTrace, phaseTrace], layout);
+      Plotly.newPlot(phaseGraph, [phaseTrace], { title: "Phase" });
     })
     .catch((error) => {
       // Handle errors, e.g. display an error message to the user
