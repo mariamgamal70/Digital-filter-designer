@@ -62,6 +62,7 @@ function createZero(x, y) {
     if (deleteButton.checked) {
       canvasContainer.removeChild(zero);
       zeros = zeros.filter((item) => item.element !== zero);
+      getFrequencyResponse();
     }
   });
   dragElement(zero);
@@ -80,6 +81,7 @@ function createPole(x, y) {
     if (deleteButton.checked) {
       canvasContainer.removeChild(pole);
       poles = poles.filter((item) => item.element !== pole);
+      getFrequencyResponse();
     }
   });
   dragElement(pole);
@@ -148,7 +150,8 @@ function clearPoles() {
 function clearAll() {
   clearZeros();
   clearPoles();
-  getFrequencyResponse();
+  Plotly.deleteTraces(magnitudeGraph, 0);
+  Plotly.deleteTraces(phaseGraph, 0);
 }
 
 function convertToPolarCoordinates() {
