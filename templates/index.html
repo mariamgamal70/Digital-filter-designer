@@ -78,38 +78,132 @@
 </div>
 </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog modal-fullscreen">
-            <div class="modal-content text-dark" >
-                <div class="modal-header td">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">All-pass filters</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle me-4 dropdown-wide" type="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Select desired All-pass
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-light">
-                            <li><a class="dropdown-item" href="#">1+0.5j</a></li>
-                            <li><a class="dropdown-item" href="#">1+2j</a></li>
-                            <li><a class="dropdown-item customize-option" href="#">Customize</a></li>
-                        </ul>
-                        <button type="button" class="btn btn-outline-primary add-button">Add</button>
-                        <button type="button" class="btn btn-outline-primary delete-button">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
+ !-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content text-dark">
+            <div class="modal-header td">
+                <h3 class="modal-title fs-5" id="exampleModalLabel">All-pass filter</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="proberty">
+                    <div class="row">
+                        <div class="col">
+                            <!--All-Pass response -->
+                            <div class="border border-primary rounded mb-1  ">
+                                <div id="All-Pass response" style="width:500px;height:300px;"></div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <!-- Original Phase-->
+                            <div class="border border-primary rounded">
+                                <div id="originalphase" style="width:500px;height: 300px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle me-4 dropdown-wide" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select desired All-pass
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-light">
+                                    <li><a class="dropdown-item" href="#">1+0.5j</a></li>
+                                    <li><a class="dropdown-item" href="#">1+2j</a></li>
+                                    <li><a class="dropdown-item" href="#">1+1j</a></li>
+                                    <li><a class="dropdown-item" href="#">4+0.5j</a></li>
+                                    <li><a class="dropdown-item" href="#">0</a></li>
+                                    <li><a class="dropdown-item customize-option" href="#">Customize</a></li>
+                                </ul>
+                                <button type="button" class="btn btn-outline-primary add-button">Add</button>
+                                <button type="button" class="btn btn-outline-primary delete-button">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                            <div class="input-group mt-2">
+                                <input type="text" class="form-control custom-input-container" id="customInputContainer"
+                                    placeholder="Enter desired value" style="display: none;">
+                            </div>
+                            <ul id="selectedItemsList" class="mt-4"></ul>
+                            <!--<label for="dropdown">Select an option:</label>
+                            <select id="dropdown" name="dropdown">
+                              <option value="option1">1+0.5j </option>
+                              <option value="option2">1+1j </option>
+                              <option value="option3">0.5+0.5j </option>
+                              <option value="option4">4+0.5j </option>
+                              <option value="option5">0.5+1j </option>
+                              <option value="option6">0 </option>
+                              <option value="custom">Custom</option>
+                            </select>
+                            
+                            <div id="customInputContainer" style="display: none;">
+                              <label for="customInput">Custom Value:</label>
+                              <input type="text" id="customInput" name="customInput">
+                            </div>-->
+                        </div>
+                    </div><br><br>
+
+                    <!--Slider-->
+                    <div class="container" id="slider">
+                        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
+                                <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
+                            </ol>
+
+                            <!-- Slides -->
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="row">
+                                        <div class="col">
+                                            <img src="/static/images/img6.jpg" alt="Image 1">
+                                        </div>
+                                        <div class="col">
+                                            <img src="/static/images/img7.jpg" alt="Image 2">
+                                        </div>
+                                        <div class="col">
+                                            <img src="/static/images/img8.jpg" alt="Image 3">
+                                        </div>
+                                        <div class="col">
+                                            <img src="/static/images/img8.jpg" alt="Image 4">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="carousel-item">
+                                    <div class="row">
+                                        <div class="col">
+                                            <img src="/static/images/img7.jpg" alt="Image 1">
+                                        </div>
+                                        <div class="col">
+                                            <img src="/static/images/img7.jpg" alt="Image 2">
+                                        </div>
+                                        <div class="col">
+                                            <img src="/static/images/img8.jpg" alt="Image 3">
+                                        </div>
+                                        <div class="col">
+                                            <img src="/static/images/img7.jpg" alt="Image 4">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Controls -->
+                            <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
+                        </div>
                     </div>
-                    <div class="input-group mt-2">
-                        <input type="text" class="form-control custom-input-container" id="customInputContainer"
-                            placeholder="Enter desired value" style="display: none;">
-                    </div>
-                    <ul id="selectedItemsList" class="mt-4"></ul>
                 </div>
-    
-    
+
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Apply</button>
@@ -120,76 +214,76 @@
     <script src="/static/canvas.js"></script>
     <script src="/static/app.js"></script>
     <script>
-                $(document).ready(function () {
-                        $('.dropdown-menu a.dropdown-item').click(function (e) {
-                            e.preventDefault();
-                            var selectedItemText = $(this).text();
-                            var customInputVisible = $('#customInputContainer').is(':visible');
+        $(document).ready(function () {
+            $('.dropdown-menu a.dropdown-item').click(function (e) {
+                e.preventDefault();
+                var selectedItemText = $(this).text();
+                var customInputVisible = $('#customInputContainer').is(':visible');
 
-                            if (selectedItemText !== 'Customize') {
-                                var listItem;
-                                if (customInputVisible) {
-                                    var customValue = $('#customInputContainer').val();
-                                    if (isValidCustomValue(customValue)) {
-                                        listItem = $('<li>').text(customValue);
-                                        $('#customInputContainer').val('').hide();
-                                    } else {
-                                        alert('Invalid custom value. Please enter a value in the form x+yj.');
-                                    }
-                                } else {
-                                    listItem = $('<li>').text(selectedItemText);
-                                }
-
-                                if (listItem && selectedItemText !== 'Customize') {
-                                    $('#selectedItemsList').append(listItem);
-                                }
-                            }
-                        });
-
-                        $('.customize-option').click(function (e) {
-                            e.preventDefault();
-                            $('#customInputContainer').toggle();
-                        });
-
-                        $('.add-button').click(function (e) {
-                            e.preventDefault();
-                            var customValue = $('#customInputContainer').val();
-                            if (isValidCustomValue(customValue)) {
-                                var listItem = $('<li>').text(customValue);
-                                $('#selectedItemsList').append(listItem);
-                                $('#customInputContainer').val('').hide();
-                            } else {
-                                alert('Invalid custom value. Please enter a value in the form x+yj.');
-                            }
-                        });
-
-                        function isValidCustomValue(value) {
-                            var pattern = /^[-+]?[\d]+(\.[\d]+)?[+-][\d]+(\.[\d]+)?[j]$/;
-                            return pattern.test(value);
+                if (selectedItemText !== 'Customize') {
+                    var listItem;
+                    if (customInputVisible) {
+                        var customValue = $('#customInputContainer').val();
+                        if (isValidCustomValue(customValue)) {
+                            listItem = $('<li>').text(customValue);
+                            $('#customInputContainer').val('').hide();
+                        } else {
+                            alert('Invalid custom value. Please enter a value in the form x+yj.');
                         }
-                    });
-                    $(document).ready(function () {
-                        // Event listener for the delete button
-                        $('.delete-button').on('click', function () {
-                            // Find the selected item's index and remove it from the list
-                            var selectedIndex = $('#selectedItemsList li.active').index();
-                            $('#selectedItemsList li.active').remove();
+                    } else {
+                        listItem = $('<li>').text(selectedItemText);
+                    }
 
-                            // If there are remaining items, update the active selection
-                            var remainingItems = $('#selectedItemsList li');
-                            if (remainingItems.length > 0) {
-                                // Check if the deleted item was the last item
-                                if (selectedIndex === remainingItems.length) {
-                                    // If so, select the previous item
-                                    remainingItems.eq(selectedIndex - 1).addClass('active');
-                                } else {
-                                    // Otherwise, select the next item
-                                    remainingItems.eq(selectedIndex).addClass('active');
-                                }
-                            }
-                        });
-                    });
-                
+                    if (listItem && selectedItemText !== 'Customize') {
+                        $('#selectedItemsList').append(listItem);
+                    }
+                }
+            });
+
+            $('.customize-option').click(function (e) {
+                e.preventDefault();
+                $('#customInputContainer').toggle();
+            });
+
+            $('.add-button').click(function (e) {
+                e.preventDefault();
+                var customValue = $('#customInputContainer').val();
+                if (isValidCustomValue(customValue)) {
+                    var listItem = $('<li>').text(customValue);
+                    $('#selectedItemsList').append(listItem);
+                    $('#customInputContainer').val('').hide();
+                } else {
+                    alert('Invalid custom value. Please enter a value in the form x+yj.');
+                }
+            });
+
+            function isValidCustomValue(value) {
+                var pattern = /^[-+]?[\d]+(\.[\d]+)?[+-][\d]+(\.[\d]+)?[j]$/;
+                return pattern.test(value);
+            }
+        });
+        $(document).ready(function () {
+            // Event listener for the delete button
+            $('.delete-button').on('click', function () {
+                // Find the selected item's index and remove it from the list
+                var selectedIndex = $('#selectedItemsList li.active').index();
+                $('#selectedItemsList li.active').remove();
+
+                // If there are remaining items, update the active selection
+                var remainingItems = $('#selectedItemsList li');
+                if (remainingItems.length > 0) {
+                    // Check if the deleted item was the last item
+                    if (selectedIndex === remainingItems.length) {
+                        // If so, select the previous item
+                        remainingItems.eq(selectedIndex - 1).addClass('active');
+                    } else {
+                        // Otherwise, select the next item
+                        remainingItems.eq(selectedIndex).addClass('active');
+                    }
+                }
+            });
+        });
+
 
     </script>
 </body>
