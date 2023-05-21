@@ -5,21 +5,19 @@ const conjugateButton = document.getElementById("conjugate");
 const clearAllButton = document.getElementById("clearall");
 const canvasContainer = document.getElementById("canvascontainer");
 let unitCircleCanvas = document.getElementById("unitcirclecanva");
-let lastAddedElement = null;
-
+let lastAddedElement=null;
 let zeros = [];
 let poles = [];
 
 let context = unitCircleCanvas.getContext("2d");
 context.beginPath();
-context.arc(150, 150, 100, 0, 2 * Math.PI);
+context.arc(150, 150, 150, 0, 2 * Math.PI);
 context.stroke();
 context.moveTo(0, 150);
 context.lineTo(300, 150);
 context.stroke();
 context.moveTo(150, 0);
 context.lineTo(150, 300);
-context.strokeStyle = "#dd3444";
 context.stroke();
 context.closePath();
 
@@ -31,25 +29,27 @@ unitCircleCanvas.addEventListener("click", (event) => {
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   if (addZeroButton.checked) {
-      createZero(x, y);
-      lastAddedElement = zeros[zeros.length - 1];
-      conjugateButton.addEventListener("click",()=>{
-                const rectelement = lastAddedElement.getBoundingClientRect();
-                const xelement = rectelement.left;
-                const yelement = rectelement.top;
-            createZero(xelement,  yelement);
-      });
+    createZero(x, y);
+    lastAddedElement = zeros[zeros.length - 1];
+    conjugateButton.removeEventListener("click", conjugatePoleHandler);
+    conjugateButton.addEventListener("click", conjugateZeroHandler);
   } else if (addPoleButton.checked) {
-        createPole(x, y);
-        lastAddedElement = poles[poles.length - 1];
-        conjugateButton.addEventListener("click",()=>{
-                const rectelement = lastAddedElement.getBoundingClientRect();
-                const xelement = rectelement.left;
-                const yelement = rectelement.top;
-            createPole(xelement,  yelement);
-        });
-    }
+    createPole(x, y);
+    lastAddedElement = poles[poles.length - 1];
+    conjugateButton.removeEventListener("click", conjugateZeroHandler);
+    conjugateButton.addEventListener("click", conjugatePoleHandler);
+  }
 });
+
+clearAllButton.addEventListener("click", clearAll);
+
+function conjugatePoleHandler(){
+    createPole(lastAddedElement.x, 300 - lastAddedElement.y);
+}
+
+function conjugateZeroHandler() {
+    createZero(lastAddedElement.x, 300 - lastAddedElement.y);
+}
 
 function createZero(x, y) {
   const zero = document.createElement("div");
@@ -57,13 +57,15 @@ function createZero(x, y) {
   zero.style.left = x - 5 + "px";
   zero.style.top = y - 5 + "px";
   canvasContainer.appendChild(zero);
-  zeros.push(zero);
+  zeros.push({element:zero,x:x,y:y});
   zero.addEventListener("click", () => {
-    if (deleteButton.checked){
+    if (deleteButton.checked) {
       canvasContainer.removeChild(zero);
-      zeros = zeros.filter((item) => item !== zero);
-}});
+      zeros = zeros.filter((item) => item.element !== zero);
+    }
+  });
   dragElement(zero);
+  convertToPolarCoordinates();
 }
 
 function createPole(x, y) {
@@ -72,14 +74,15 @@ function createPole(x, y) {
   pole.style.left = x - 5 + "px";
   pole.style.top = y - 5 + "px";
   canvasContainer.appendChild(pole);
-  poles.push(pole);
+  poles.push({ element: pole, x: x, y: y });
   pole.addEventListener("click", () => {
-    if (deleteButton.checked){
-        console.log("hi")
+    if (deleteButton.checked) {
       canvasContainer.removeChild(pole);
-      poles = poles.filter((item) => item !== pole);
-    }}); 
+      poles = poles.filter((item) => item.element !== pole);
+    }
+  });
   dragElement(pole);
+  convertToPolarCoordinates();
 }
 
 function dragElement(element) {
@@ -108,6 +111,19 @@ function dragElement(element) {
     pos4 = e.clientY;
     element.style.top = element.offsetTop - pos2 + "px";
     element.style.left = element.offsetLeft - pos1 + "px";
+    // Update the x and y coordinates in the corresponding shape object
+    const shapeIndex = zeros.findIndex((item) => item.element === element);
+    if (shapeIndex !== -1) {
+      zeros[shapeIndex].x = element.offsetLeft;
+      zeros[shapeIndex].y = element.offsetTop;
+    } else {
+      const shapeIndex = poles.findIndex((item) => item.element === element);
+      if (shapeIndex !== -1) {
+        poles[shapeIndex].x = element.offsetLeft;
+        poles[shapeIndex].y = element.offsetTop;
+      }
+    }
+    convertToPolarCoordinates();
   }
 
   function closeDragElement() {
@@ -117,12 +133,12 @@ function dragElement(element) {
 }
 
 function clearZeros() {
-  zeros.forEach((zero) => canvasContainer.removeChild(zero));
+  zeros.forEach((zero) => canvasContainer.removeChild(zero.element));
   zeros = [];
 }
 
 function clearPoles() {
-  poles.forEach((pole) => canvasContainer.removeChild(pole));
+  poles.forEach((pole) => canvasContainer.removeChild(pole.element));
   poles = [];
 }
 
@@ -130,5 +146,29 @@ function clearAll() {
   clearZeros();
   clearPoles();
 }
-clearAllButton.addEventListener("click", clearAll);
 
+function convertToPolarCoordinates() {
+  const shapes = [...zeros, ...poles]; // Combine zeros and poles into a single array
+  for (let shape of shapes) {
+    const x =(shape.x-150)/150; // Calculate the center x-coordinate of the shape
+    const y = (shape.y - 150)/150; // Calculate the center y-coordinate of the shape
+    // Convert the x and y coordinates to polar coordinates
+    const radius = Math.sqrt((x) ** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
+    const angle = Math.atan2(y, x); // Angle in radians
+    // Store the polar coordinates in the shape's data attributes
+    shape.radius = radius;
+    shape.angle = angle;
+  }
+}
+
+function getFrequencyResponse(){
+  var formData = new FormData();
+  formData.append("zeros", zeros);
+  formData.append("poles", poles);
+   fetch("/getMagnitudeAndPhase", {
+     method: "POST",
+     body: formData,
+   })
+     .then((response) => response.json())
+     .then((result) => {});
+}
