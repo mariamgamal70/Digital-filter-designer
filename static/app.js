@@ -134,3 +134,80 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
+// Add event listener for adding zeros and poles
+document.querySelectorAll('.btn-check').forEach(function (button) {
+  button.addEventListener('click', function () {
+    // Get the canvas and context
+    var canvas = document.getElementById('unitcirclecanva');
+    var context = canvas.getContext('2d');
+
+    // Get the current position of the mouse on the canvas
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+
+    // Convert the mouse position to a complex number on the unit circle
+    var z = pixelToComplex(x, y, canvas.width, canvas.height);
+
+    // Add the zero or pole to the filter
+    if (button.id === 'zero') {
+      filter.addZero(z);
+    } else if (button.id === 'pole') {
+      filter.addPole(z);
+    }
+
+    // Plot the magnitude and phase response
+    plotMagnitude();
+    plotPhase();
+  });
+});
+
+// Function to plot the magnitude response
+function plotMagnitude() {
+  var data = [{
+    x: filter.getFrequencyResponse().frequencies,
+    y: filter.getFrequencyResponse().magnitude,
+    type: 'scatter',
+    mode: 'lines',
+    line: {
+      color: 'blue'
+    }
+  }];
+
+  var layout = {
+    title: 'Magnitude Response',
+    xaxis: {
+      title: 'Frequency (Hz)'
+    },
+    yaxis: {
+      title: 'Magnitude (dB)'
+    }
+  };
+
+  Plotly.newPlot('magnitude', data, layout);
+}
+
+// Function to plot the phase response
+function plotPhase() {
+  var data = [{
+    x: filter.getFrequencyResponse().frequencies,
+    y: filter.getFrequencyResponse().phase,
+    type: 'scatter',
+    mode: 'lines',
+    line: {
+      color: 'blue'
+    }
+  }];
+
+  var layout = {
+    title: 'Phase Response',
+    xaxis: {
+      title: 'Frequency (Hz)'
+    },
+    yaxis: {
+      title: 'Phase (degrees)'
+    }
+  };
+
+  Plotly.newPlot('phase', data, layout);
+}
