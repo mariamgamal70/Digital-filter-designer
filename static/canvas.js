@@ -66,6 +66,7 @@ function createZero(x, y) {
   });
   dragElement(zero);
   convertToPolarCoordinates();
+  getFrequencyResponse();
 }
 
 function createPole(x, y) {
@@ -83,6 +84,7 @@ function createPole(x, y) {
   });
   dragElement(pole);
   convertToPolarCoordinates();
+  getFrequencyResponse();
 }
 
 function dragElement(element) {
@@ -124,6 +126,7 @@ function dragElement(element) {
       }
     }
     convertToPolarCoordinates();
+    getFrequencyResponse();
   }
 
   function closeDragElement() {
@@ -145,6 +148,7 @@ function clearPoles() {
 function clearAll() {
   clearZeros();
   clearPoles();
+  getFrequencyResponse();
 }
 
 function convertToPolarCoordinates() {
@@ -160,11 +164,26 @@ function convertToPolarCoordinates() {
     shape.angle = angle;
   }
 }
+function convertPolarToComplex(){
+  let realZeros=zeros.map(zero=>zero.radius*Math.cos(zero.angle));
+  let realPoles=poles.map(pole=>pole.radius*Math.cos(pole.angle));
+  let imgZeros=zeros.map(zero=>zero.radius*Math.sin(zero.angle));
+  let imgPoles = poles.map((pole) => pole.radius * Math.sin(pole.angle));
+  return {
+    realZeros: realZeros,
+    realPoles: realPoles,
+    imgZeros: imgZeros,
+    imgPoles: imgPoles,
+  };
+}
 
 function getFrequencyResponse() {
+  const complexForm = convertPolarToComplex();
   const formData = new FormData();
-  formData.append("zeros", JSON.stringify(zeros));
-  formData.append("poles", JSON.stringify(poles));
+  formData.append("realZeros", complexForm.realZeros);
+  formData.append("realPoles", complexForm.realPoles);
+  formData.append("imgZeros", complexForm.imgZeros);
+  formData.append("imgPoles", complexForm.imgPoles);
 
   fetch("/getMagnitudeAndPhase", {
     method: "POST",
@@ -177,23 +196,32 @@ function getFrequencyResponse() {
       return response.json();
     })
     .then((data) => {
-      // Update the magnitude plot with the magnitude data
       const magTrace = {
-        x: data.magnitude.frequency,
-        y: data.magnitude.magnitude,
+        x: data.frequency,
+        y: data.magnitude,
         type: "scatter",
         name: "Magnitude",
       };
-      Plotly.newPlot(magnitudeGraph, [magTrace], { title: "Magnitude" });
-
-      // Update the phase plot with the phase data
       const phaseTrace = {
-        x: data.phase.frequency,
-        y: data.phase.phase,
+        x: data.frequency,
+        y: data.phase,
         type: "scatter",
         name: "Phase",
       };
-      Plotly.newPlot(phaseGraph, [phaseTrace], { title: "Phase" });
+      // Update the magnitude plot with the magnitude data
+      if (magnitudeGraph.data.length == 0) {
+        Plotly.addTraces(magnitudeGraph, magTrace);
+      } else {
+        Plotly.deleteTraces(magnitudeGraph, 0);
+        Plotly.addTraces(magnitudeGraph, magTrace);
+      }
+      // Update the phase plot with the phase data
+      if (phaseGraph.data.length == 0) {
+        Plotly.addTraces(phaseGraph, phaseTrace);
+      } else {
+        Plotly.deleteTraces(phaseGraph, 0);
+        Plotly.addTraces(phaseGraph, phaseTrace);
+      }
     })
     .catch((error) => {
       // Handle errors, e.g. display an error message to the user

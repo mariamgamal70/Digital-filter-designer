@@ -134,33 +134,33 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
-// Add event listener for adding zeros and poles
-document.querySelectorAll('.btn-check').forEach(function (button) {
-  button.addEventListener('click', function () {
-    // Get the canvas and context
-    var canvas = document.getElementById('unitcirclecanva');
-    var context = canvas.getContext('2d');
+// // Add event listener for adding zeros and poles
+// document.querySelectorAll('.btn-check').forEach(function (button) {
+//   button.addEventListener('click', function () {
+//     // Get the canvas and context
+//     var canvas = document.getElementById('unitcirclecanva');
+//     var context = canvas.getContext('2d');
 
-    // Get the current position of the mouse on the canvas
-    var rect = canvas.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var y = event.clientY - rect.top;
+//     // Get the current position of the mouse on the canvas
+//     var rect = canvas.getBoundingClientRect();
+//     var x = event.clientX - rect.left;
+//     var y = event.clientY - rect.top;
 
-    // Convert the mouse position to a complex number on the unit circle
-    var z = pixelToComplex(x, y, canvas.width, canvas.height);
+//     // Convert the mouse position to a complex number on the unit circle
+//     var z = pixelToComplex(x, y, canvas.width, canvas.height);
 
-    // Add the zero or pole to the filter
-    if (button.id === 'zero') {
-      filter.addZero(z);
-    } else if (button.id === 'pole') {
-      filter.addPole(z);
-    }
+//     // Add the zero or pole to the filter
+//     if (button.id === 'zero') {
+//       filter.addZero(z);
+//     } else if (button.id === 'pole') {
+//       filter.addPole(z);
+//     }
 
-    // Plot the magnitude and phase response
-    plotMagnitude();
-    plotPhase();
-  });
-});
+//     // Plot the magnitude and phase response
+//     plotMagnitude();
+//     plotPhase();
+//   });
+// });
 
 // Function to plot the magnitude response
 function plotMagnitude() {

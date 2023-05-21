@@ -20,20 +20,28 @@ def home():
 
 @app.route('/getMagnitudeAndPhase', methods=['POST'])
 def getMagnitudeAndPhase():
-    zeros = request.form.getlist('zeros')
-    poles = request.form.getlist('poles')
-    zeros = [complex(z) for z in zeros]
-    poles = [complex(p) for p in poles]
+    real_zeros = request.form.getlist('realZeros')
+    real_poles = request.form.getlist('realPoles')
+    img_zeros = request.form.getlist('imgZeros')
+    img_poles = request.form.getlist('imgPoles')
+
+    zeros_complex=[]
+    poles_complex=[]
+    for real, img in zip(real_poles, img_poles):
+        if real and img:
+            zeros_complex.append(complex(float(real), float(img)))
+    for real, img in zip(real_zeros, img_zeros):
+        if real and img:
+            poles_complex.append(complex(float(real), float(img)))
 
     # Calculate the frequency response using the zeros and poles
-    w, h = signal.freqz_zpk(zeros, poles, worN=1024)
-    mag = 20 * np.log10(np.abs(h))
-    phase = np.angle(h)
+    freq, complex_gain = signal.freqz_zpk(zeros_complex, poles_complex, 1)
+    mag = 20 * np.log10(np.abs(complex_gain))
+    phase = np.unwrap(np.angle(complex_gain))
 
     # Convert the frequency response to two separate arrays for magnitude and phase
-    mag_response = {'frequency': w.tolist(), 'magnitude': mag.tolist()}
-    phase_response = {'frequency': w.tolist(), 'phase': phase.tolist()}
-    return jsonify(mag_response, phase_response)
+    response = {'frequency': freq.tolist(), 'magnitude': mag.tolist(),'phase': phase.tolist()}
+    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
