@@ -3,19 +3,19 @@ const phaseGraph = document.getElementById("phase");
 const inputSignalGraph = document.getElementById("inputsignal");
 const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
-const uploadSignal=document.getElementById("uploadsignal")
-let time=50;
+const uploadSignal = document.getElementById("uploadsignal");
+let time = 50;
 
-    window.addEventListener("load", function () {
-      createPlot(magnitudeGraph);
-      Plotly.relayout(magnitudeGraph, { title: "Magnitude" });
-      createPlot(phaseGraph);
-      Plotly.relayout(phaseGraph, { title: "Phase" });
-      createPlot(inputSignalGraph);
-      Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
-      createPlot(outputSignalGraph);
-      Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
-    });
+window.addEventListener("load", function () {
+  createPlot(magnitudeGraph);
+  Plotly.relayout(magnitudeGraph, { title: "Magnitude" });
+  createPlot(phaseGraph);
+  Plotly.relayout(phaseGraph, { title: "Phase" });
+  createPlot(inputSignalGraph);
+  Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
+  createPlot(outputSignalGraph);
+  Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
+});
 
 function createPlot(graphElement) {
   let layout = {
@@ -23,28 +23,13 @@ function createPlot(graphElement) {
     xaxis: {
       title: "Time (sec)",
       zoom: 1000,
-      titlefont: {
-        color: " #dd3444",     // Set x-axis title color to red
-      },
-      tickfont: {
-        color: " #dd3444",     // Set x-axis tick labels color to red
-      },
     },
     yaxis: {
       title: "Amplitude",
-      titlefont: {
-        color: " #dd3444",     // Set x-axis title color to red
-      },
-      tickfont: {
-        color: " #dd3444",     // Set x-axis tick labels color to red
-      },
+
     },
     showlegend: false,
-    plot_bgcolor: "black",     // Set plot background color to black
-    paper_bgcolor: "black",    // Set paper background color to black
-    font: {
-      color: "white",          // Set font color to white
-    },
+
   };
   Plotly.newPlot(graphElement, [], layout, {
     displaylogo: false,
@@ -110,7 +95,6 @@ function plotSignal(data, graphElement) {
     //restart plottingInterval in order to apply speed changes
     startInterval();
   });
-
 }
 
 function convertCsvToTrace(csvdata) {
@@ -150,53 +134,3 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
-
-
-// function deleteZero(zero) {
-//   zeroContainer.removeChild(zero);
-//   zeros = zeros.filter((item) => item !== zero);
-// }
-
-// function deletePole(pole) {
-//   zeroContainer.removeChild(pole);
-//   poles = poles.filter((item) => item !== pole);
-// }
-
-// function clearZeros() {
-//   zeros.forEach((zero) => zeroContainer.removeChild(zero));
-//   zeros = [];
-// }
-
-// function clearPoles() {
-//   poles.forEach((pole) => zeroContainer.removeChild(pole));
-//   poles = [];
-// }
-
-// function clearAll() {
-//   clearZeros();
-//   clearPoles();
-// }
-
-// clearZerosButton.addEventListener("click", clearZeros);
-// clearPolesButton.addEventListener("click", clearPoles);
-// clearAllButton.addEventListener("click", clearAll);
-
-// unitCircleCanvas.addEventListener("click", (e) => {
-//   const rect = unitCircleCanvas.getBoundingClientRect();
-//   const x = e.clientX - rect.left;
-//   const y = e.clientY - rect.top;
-//   if (conjugateCheckbox.checked) {
-//     createZero(x, y);
-//     createZero(x, 300 - y);
-//   } else {
-//     createZero(x, y);
-//   }
-// });
-
-// zeroContainer.addEventListener("click", (e) => {
-//   if (e.target.classList.contains("zero")) {
-//     deleteZero(e.target);
-//   } else if (e.target.classList.contains("pole")) {
-//     deletePole(e.target);
-//   }
-// });
