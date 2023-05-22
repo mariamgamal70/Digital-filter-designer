@@ -54,7 +54,7 @@ function conjugateZeroHandler() {
 function createZero(x, y) {
   const zero = document.createElement("div");
   zero.className = "zero";
-  zero.style.left = x - 5 + "px";
+  zero.style.left = x - 5 + "px";   
   zero.style.top = y - 5 + "px";
   canvasContainer.appendChild(zero);
   zeros.push({element:zero,x:x,y:y});
@@ -157,11 +157,24 @@ function clearAll() {
 function convertToPolarCoordinates() {
   const shapes = [...zeros, ...poles]; // Combine zeros and poles into a single array
   for (let shape of shapes) {
-    const x =(shape.x - 150)/150; // Calculate the center x-coordinate of the shape
-    const y = (150-shape.y )/150; // Calculate the center y-coordinate of the shape
+    let x = ((shape.x - 150) / 150).toFixed(4); // Calculate the center x-coordinate of the shape and round to 2 decimal places
+    let y = ((150 - shape.y) / 150).toFixed(4); // Calculate the center y-coordinate of the shape and round to 2 decimal places
+
+    // // Check if x is 0.0 or -0.0 and take its absolute value
+    // if (x === "0.00" || x === "-0.00") {
+    //   x = 0.00;
+    // }
+
+    // // Check if y is 0.0 or -0.0 and take its absolute value
+    // if (y === "0.00" || y === "-0.00") {
+    //   y = 0.00;
+    // }
+    console.log("x", x, "y", y);
+
     // Convert the x and y coordinates to polar coordinates
-    const radius = Math.sqrt((x) ** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
+    const radius = Math.sqrt((x)** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
     const angle = Math.atan2(y, x); // Angle in radians
+    console.log(angle);
     // Store the polar coordinates in the shape's data attributes
     shape.radius = radius;
     shape.angle = angle;

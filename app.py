@@ -7,12 +7,11 @@ import os
 import pandas as pd
 from flask import redirect, url_for
 import math
+from Filter import Filter
+
 app = Flask(__name__)
 
-def polar_to_rectangular(radius, angle):
-    real = radius * math.cos(angle)
-    imaginary = radius * math.sin(angle)
-    return real, imaginary
+filters =Filter()
 
 @app.route('/')
 def home():
@@ -29,25 +28,12 @@ def getMagnitudeAndPhase():
     real_zeros_values = np.array([float(value) for element in real_zeros if element for value in element.split(',')])
     img_zeros_values = np.array([float(value) for element in img_zeros if element for value in element.split(',')])
     img_poles_values = np.array([float(value) for element in img_poles if element for value in element.split(',')])
-
-    zeros_complex=[]
-    poles_complex=[]
+    filters.set_real_poles(real_poles_values)
+    filters.set_real_zeros(real_zeros_values)
+    filters.set_img_zeros(img_zeros_values)
+    filters.set_img_poles(img_poles_values)
     
-    for real, img in zip(real_poles_values, img_poles_values):
-        if real and img:
-            poles_complex.append(complex(float(real), float(img)))
-    for real, img in zip(real_zeros_values, img_zeros_values):
-        if real and img:
-            zeros_complex.append(complex(float(real), float(img)))
-
-    # Calculate the frequency response using the zeros and poles
-    freq, complex_gain = signal.freqz_zpk(zeros_complex, poles_complex, 1)
-    mag = 20 * np.log10(np.abs(complex_gain))
-    phase = np.unwrap(np.angle(complex_gain))
-
-    # Convert the frequency response to two separate arrays for magnitude and phase
-    response = {'frequency': freq.tolist(), 'magnitude': mag.tolist(),'phase': phase.tolist()}
-    return jsonify(response)
+    return jsonify(filters.get_magnitude_phase_response())
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
