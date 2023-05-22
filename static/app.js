@@ -5,9 +5,10 @@ const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
-const OriginalPhaseGraph= document.getElementById("originalphase")
+const OriginalPhaseGraph= document.getElementById("originalphase");
 // const OrignialPhase =  document.getElementById("originalphase");
 let time = 50;
+let uploadedSignal = {};
 
 window.addEventListener("load", function () {
   createPlot(magnitudeGraph);
@@ -124,10 +125,11 @@ function convertCsvToTrace(csvdata) {
   // Extract data from the CSV data
   let x = csvdata.map((arrRow) => arrRow.col1);
   let y = csvdata.map((arrRow) => arrRow.col2);
-  let uploadedSignal = { x: x, y: y };
+  uploadedSignal = { x: x, y: y };
   // If there are no existing signals, add the uploaded signal as a trace to the plot else add the uploaded signal as a component to the plot
   Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
   plotSignal(uploadedSignal, inputSignalGraph);
+  applyFilter(); 
 }
 
 // event listener to the file upload input element to trigger when a file is selected
@@ -157,30 +159,33 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
-// // Add event listener for adding zeros and poles
-// document.querySelectorAll('.btn-check').forEach(function (button) {
-//   button.addEventListener('click', function () {
-//     // Get the canvas and context
-//     var canvas = document.getElementById('unitcirclecanva');
-//     var context = canvas.getContext('2d');
-
-//     // Get the current position of the mouse on the canvas
-//     var rect = canvas.getBoundingClientRect();
-//     var x = event.clientX - rect.left;
-//     var y = event.clientY - rect.top;
-
-//     // Convert the mouse position to a complex number on the unit circle
-//     var z = pixelToComplex(x, y, canvas.width, canvas.height);
-
-//     // Add the zero or pole to the filter
-//     if (button.id === 'zero') {
-//       filter.addZero(z);
-//     } else if (button.id === 'pole') {
-//       filter.addPole(z);
-//     }
-
-//     // Plot the magnitude and phase response
-//     plotMagnitude();
-//     plotPhase();
-//   });
-// });
+function applyFilter() {
+  const formData = new FormData();
+  formData.append("amplitude", uploadedSignal.y);
+  console.log(uploadedSignal.y);
+  fetch("/applyFilter", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("filter failed");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      let outputsignal = { x: uploadedSignal.x, y: data.filteredData };
+      if (outputSignalGraph.data.length==0){
+        Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
+      }else{
+        Plotly.deleteTraces(outputSignalGraph, 0);
+        Plotly.addTraces(outputSignalGraph, outputsignal);
+      }
+      plotSignal(outputsignal, outputSignalGraph);
+      }
+    )
+    .catch((error) => {
+      // Handle errors, e.g. display an error message to the user
+      console.error("Error fetching frequency response:", error);
+    });
+}

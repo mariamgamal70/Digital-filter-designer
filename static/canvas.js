@@ -8,6 +8,7 @@ let unitCircleCanvas = document.getElementById("unitcirclecanva");
 let lastAddedElement=null;
 let zeros = [];
 let poles = [];
+let filterUpdated=false;
 
 let context = unitCircleCanvas.getContext("2d");
 context.beginPath();
@@ -200,7 +201,7 @@ function getFrequencyResponse() {
   formData.append("realPoles", complexForm.realPoles);
   formData.append("imgZeros", complexForm.imgZeros);
   formData.append("imgPoles", complexForm.imgPoles);
-
+  filterUpdated=true;
   fetch("/getMagnitudeAndPhase", {
     method: "POST",
     body: formData,

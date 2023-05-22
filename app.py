@@ -35,5 +35,21 @@ def getMagnitudeAndPhase():
     
     return jsonify(filters.get_magnitude_phase_response())
 
+@app.route('/applyFilter', methods=['POST'])
+def apply_filter_route():
+    # Get the input data from the request
+    data = request.form.getlist('amplitude')
+    data = [float(value) for element in data for value in element.split(',')]
+    print("data",data)
+    # Calculate the filter coefficients from the zeros and poles
+    # filters.calculate_filter_coeffs()
+    # Apply the filter to the data
+    filtered_data = filters.apply_filter(data)
+    # Convert complex numbers to a JSON serializable format
+    filtered_data = [value.real for value in filtered_data]
+    # Return the filtered data as a JSON response
+    response = {'filteredData': filtered_data}
+    return jsonify(response)
+
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

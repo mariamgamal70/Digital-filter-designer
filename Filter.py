@@ -12,6 +12,7 @@ class Filter:
         self.norm_freq=[]
         self.mag=[]
         self.phase=[]
+        
 
     def set_real_poles(self,values):
         # self.real_poles_values=[]
@@ -60,3 +61,25 @@ class Filter:
         'phase': np.array(self.phase).tolist()
     }
         return response
+    
+    def apply_filter(self,inputsignal):
+            # Convert the zeros and poles to filter coefficients
+            num_coeff, deno_coeff = signal.zpk2tf(self.zeros_complex,self.poles_complex, 1)
+            # Apply the filter
+            output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
+            
+            return output_signal
+
+            
+    
+    # def calculate_filter_coeffs(self):
+    #     # Convert the zeros and poles to filter coefficients
+    #     zeros = [complex(real, img) for real, img in zip(self.real_zeros_values, self.img_zeros_values)]
+    #     poles = [complex(real, img) for real, img in zip(self.real_poles_values, self.img_poles_values)]
+    #     self.b_coeffs, self.a_coeffs = self.get_filter_coeffs(zeros, poles)
+
+    # def apply_filter(self, data):
+    #     # Apply the filter to the data using the filtfilt function
+    #     filtered_data = signal.filtfilt(self.b_coeffs, self.a_coeffs, data)
+    #     return filtered_data
+    
