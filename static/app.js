@@ -5,7 +5,7 @@ const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
-const OrignialPhase = document.getElementById("phase");
+const OrignialPhase = document.getElementById("original phase");
 let time = 50;
 
 window.addEventListener("load", function () {
@@ -30,7 +30,12 @@ window.addEventListener("load", function () {
     "xaxis.title": "Frequency (Hz)",
     "yaxis.title": "Amplitude (dB)",
   });
-
+  createPlot(OrignialPhase);
+  Plotly.relayout(OrignialPhase, { 
+    title: "Orignial Phase",
+    "xaxis.title": "Frequency (Hz)",
+    "yaxis.title": "Angle (radians)",
+   });
 });
 
 function createPlot(graphElement) {
