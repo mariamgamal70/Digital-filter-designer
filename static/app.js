@@ -5,7 +5,7 @@ const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
-const OrignialPhase = document.getElementById("original phase");
+const OrignialPhase = document.getElementById("phase");
 let time = 50;
 
 window.addEventListener("load", function () {
