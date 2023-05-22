@@ -7,6 +7,8 @@ const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
 const OriginalPhaseGraph= document.getElementById("originalphase")
 // const OrignialPhase =  document.getElementById("originalphase");
+
+var listItemArray = [];
 let time = 50;
 
 window.addEventListener("load", function () {
@@ -157,6 +159,139 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
+function handleDropdownItemClick(event) {
+  event.preventDefault();
+  var selectedItemText = this.textContent;
+  var customInputVisible = document.getElementById('customInputContainer').style.display === 'block';
+
+  if (selectedItemText !== 'Customize') {
+    var listItem;
+    if (customInputVisible) {
+      var customValue = document.getElementById('customInputContainer').value;
+      if (isValidCustomValue(customValue)) {
+        listItem = document.createElement('li');
+        listItem.textContent = customValue;
+        document.getElementById('customInputContainer').value = '';
+        document.getElementById('customInputContainer').style.display = 'none';
+      } else {
+        alert('Invalid custom value. Please enter a value in the form x+yj.');
+      }
+    } else {
+      listItem = document.createElement('li');
+      listItem.textContent = selectedItemText;
+    }
+
+    if (listItem && selectedItemText !== 'Customize') {
+      document.getElementById('selectedItemsList').appendChild(listItem);
+    }
+  }
+}
+
+function handleCustomizeOptionClick(event) {
+  event.preventDefault();
+  document.getElementById('customInputContainer').style.display = document.getElementById('customInputContainer').style.display === 'none' ? 'block' : 'none';
+}
+function handleAddButtonClick(event) {
+  event.preventDefault();
+  var customValue = document.getElementById('customInputContainer').value;
+  if (isValidCustomValue(customValue)) {
+    var listItem = document.createElement('li');
+    listItem.textContent = customValue;
+    document.getElementById('selectedItemsList').appendChild(listItem);
+    document.getElementById('customInputContainer').value = '';
+    document.getElementById('customInputContainer').style.display = 'none';
+
+    // Push the list item into the array
+    listItemArray.push(listItem);
+  } else {
+    alert('Invalid custom value. Please enter a value in the form x+yj.');
+  }
+}
+
+function isValidCustomValue(value) {
+  var pattern = /^[-+]?[\d]+(\.[\d]+)?[+-][\d]+(\.[\d]+)?[j]$/;
+  return pattern.test(value);
+}
+
+function handleDeleteButtonClick() {
+  var selectedIndex = document.querySelector('#selectedItemsList li.active').index();
+  document.querySelector('#selectedItemsList li.active').remove();
+
+  var remainingItems = document.querySelectorAll('#selectedItemsList li');
+  if (remainingItems.length > 0) {
+    if (selectedIndex === remainingItems.length) {
+      remainingItems[selectedIndex - 1].classList.add('active');
+    } else {
+      remainingItems[selectedIndex].classList.add('active');
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var dropdownItems = document.querySelectorAll('.dropdown-menu a.dropdown-item');
+  dropdownItems.forEach(function(item) {
+    item.addEventListener('click', handleDropdownItemClick);
+  });
+
+  var customizeOption = document.querySelector('.customize-option');
+  customizeOption.addEventListener('click', handleCustomizeOptionClick);
+
+  var addButton = document.querySelector('.add-button');
+  addButton.addEventListener('click', handleAddButtonClick);
+
+  var deleteButton = document.querySelector('.delete-button');
+  deleteButton.addEventListener('click', handleDeleteButtonClick);
+});
+
+
+function applyAllPassFilter(){
+ filters=[]
+ fetch('/allpass', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(listItemArray)
+})
+  .then(function(response) {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Request failed with status ' + response.status);
+    }
+  })
+  .then(function(responseData) {
+    var dict_data = JSON.parse(responseData);
+    // makePlotly_trackpad(
+    //   dict_data["frequency"],
+    //   dict_data["phase"],
+    //   null,
+    //   null,
+    //   "allpass",
+    //   "Allpass"
+    // );
+    // var phase = dict_data["phase"];
+    // var phase_frequency = dict_data["frequency"];
+    // // Continue with the rest of the code
+  })
+  .catch(function(error) {
+    console.error('Error:', error);
+    // Handle any error that occurred during the request
+  });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // // Add event listener for adding zeros and poles
 // document.querySelectorAll('.btn-check').forEach(function (button) {
 //   button.addEventListener('click', function () {
@@ -184,3 +319,4 @@ uploadSignal.addEventListener("change", (event) => {
 //     plotPhase();
 //   });
 // });
+
