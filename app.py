@@ -10,6 +10,8 @@ from filters import Filters
 import math
 app = Flask(__name__)
 
+filter_object =Filters([(0+0j)],[(0+0j)])
+
 def polar_to_rectangular(radius, angle):
     real = radius * math.cos(angle)
     imaginary = radius * math.sin(angle)
@@ -39,7 +41,19 @@ def getMagnitudeAndPhase():
 
 @app.route('/allPass', methods=['POST','GET'])
 def applyAllPass():
-     coeffient=[]
+    filters= json.loads(request.data)
+    coefficents=[]
+    for filter in filters:
+        complexFilter=complex(filter)
+        coefficents.append(complexFilter)
+    filter_object.allPass_Filter(coefficents)
+    response_data = json.dumps({
+        'frequency' : list(filter_object.frequencies),
+        'phase'     : list(filter_object.allpass_response),
+        'total phase':list(filter_object.total_phase_response)
+    })
+        
+    return jsonify(response_data)
      
 
 
