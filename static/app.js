@@ -4,6 +4,8 @@ const inputSignalGraph = document.getElementById("inputsignal");
 const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
+const allPassResponse = document.getElementById("All-Pass");
+const OrignialPhase = document.getElementById("phase");
 let time = 50;
 
 window.addEventListener("load", function () {
@@ -23,6 +25,12 @@ window.addEventListener("load", function () {
   Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
   createPlot(outputSignalGraph);
   Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
+  createPlot(allPassResponse);
+  Plotly.relayout(allPassResponse, { title: "All-Pass response", 
+    "xaxis.title": "Frequency (Hz)",
+    "yaxis.title": "Amplitude (dB)",
+  });
+
 });
 
 function createPlot(graphElement) {
