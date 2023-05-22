@@ -225,6 +225,13 @@ function getFrequencyResponse() {
         Plotly.deleteTraces(phaseGraph, 0);
         Plotly.addTraces(phaseGraph, phaseTrace);
       }
+      // update the original phase in all-pass filter pop-up menu 
+      if (OriginalPhaseGraph.data.length == 0) {
+        Plotly.addTraces(OriginalPhaseGraph, phaseTrace);
+      } else {
+        Plotly.deleteTraces(OriginalPhaseGraph, 0);
+        Plotly.addTraces(OriginalPhaseGraph, phaseTrace);
+      }
     })
     .catch((error) => {
       // Handle errors, e.g. display an error message to the user
