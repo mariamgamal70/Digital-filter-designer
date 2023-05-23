@@ -130,6 +130,10 @@ function convertCsvToTrace(csvdata) {
   Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
   plotSignal(uploadedSignal, inputSignalGraph);
   applyFilter(); 
+   // Initialize the outputSignalGraph with an empty trace
+   if (outputSignalGraph.data.length === 0) {
+    Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
+  }
 }
 
 // event listener to the file upload input element to trigger when a file is selected
@@ -175,15 +179,10 @@ function applyFilter() {
     })
     .then((data) => {
       let outputsignal = { x: uploadedSignal.x, y: data.filteredData };
-      if (outputSignalGraph.data.length==0){
-        Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
-      }else{
-        Plotly.deleteTraces(outputSignalGraph, 0);
-        Plotly.addTraces(outputSignalGraph, outputsignal);
-      }
+      Plotly.update(outputSignalGraph, { x: [outputsignal.x], y: [outputsignal.y] }, [0]);
       plotSignal(outputsignal, outputSignalGraph);
-      }
-    )
+    })
+  
     .catch((error) => {
       // Handle errors, e.g. display an error message to the user
       console.error("Error fetching frequency response:", error);
