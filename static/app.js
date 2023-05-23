@@ -360,3 +360,19 @@ document.getElementById('img4').addEventListener('click', function () {
   document.getElementById('customInputContainer').value = '0.5-0.94j';
   document.getElementById('customInputContainer').style.display = 'block';
 })
+document.getElementById('img5').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-0.1107-0.4235j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img6').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '0.9+0j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img7').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-0.9+0j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img8').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '1.25+0.75j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})

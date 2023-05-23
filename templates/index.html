@@ -23,10 +23,10 @@
 <body>
     <header class="bg-primary mb-2 text-light p-1 d-flex justify-content-between">
         <h4 class="d-inline">Digital Filter Designer</h4>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Phase Correction
-        </button>
+        <div class="my-3">
+            <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
+            <input class="form-control" type="file" id="uploadsignal">
+        </div>
     </header>
     <div class="d-flex justify-content-evenly">
         <div class="d-flex flex-column justify-content-center ">
@@ -53,9 +53,15 @@
             <div>
                 <button type="button" class="btn btn-outline-primary w-100" id="clearall">Clear All</button>
             </div>
-            <div class="my-3">
-                <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
-                <input class="form-control" type="file" id="uploadsignal">
+            <br>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Phase Correction
+            </button>
+            <br>
+            <div class='d-inline-block w-100'>
+                <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
+                <span id="rangevalue">0%</span>
             </div>
         </div>
 
@@ -76,10 +82,6 @@
                 <div id="outputsignal" style="width:500px;height: 300px;"></div>
             </div>
             <br>
-            <div class='d-inline-block w-100'>
-                <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
-                <span id="rangevalue">0%</span>
-            </div>
             <br><br>
         </div>
     </div>
@@ -184,22 +186,22 @@
                                     </div>
 
 
-                                    <!-- <div class="carousel-item">
+                                    <div class="carousel-item">
                                         <div class="row">
                                             <div class="col">
-                                                <img src="/static/images/img7.jpg" alt="Image 1">
+                                                <img src="/static/images/-0.1107-0.4235j.png" alt="Image 1" id="img5">
                                             </div>
                                             <div class="col">
-                                                <img src="/static/images/img7.jpg" alt="Image 2">
+                                                <img src="/static/images/0.9+0j.png" alt="Image 2" id="img6">
                                             </div>
                                             <div class="col">
-                                                <img src="/static/images/img8.jpg" alt="Image 3">
+                                                <img src="/static/images/-0.9+0j.png" alt="Image 3" id="img7">
                                             </div>
                                             <div class="col">
-                                                <img src="/static/images/img7.jpg" alt="Image 4">
+                                                <img src="/static/images/1.25+0.75j.png" alt="Image 4" id="img8">
                                             </div>
                                         </div>
-                                    </div> -->
+                                    </div> 
                                 </div>
 
 
@@ -218,8 +220,8 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="applyPhaseCorrection">Apply</button>
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Apply</button>
+                        <!-- <button type="button" class="btn btn-primary" id="applyPhaseCorrection">Apply</button> -->
                     </div>
                 </div>
             </div>

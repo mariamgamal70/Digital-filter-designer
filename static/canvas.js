@@ -311,6 +311,13 @@ function applyAllPassFilter() {
         Plotly.deleteTraces(OriginalPhaseGraph, 0);
         Plotly.addTraces(OriginalPhaseGraph, totalPhase);
       }
+      if (phaseGraph.data.length==0){
+        Plotly.addTraces(phaseGraph, totalPhase);
+      } else {
+        Plotly.deleteTraces(phaseGraph, 0);
+        Plotly.addTraces(phaseGraph, totalPhase);
+      }
+      
     })
     .catch(function (error) {
       console.error("Error:", error);
