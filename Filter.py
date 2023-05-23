@@ -62,15 +62,17 @@ class Filter:
     }
         return response
     
-    def apply_filter(self,inputsignal):
-            # Convert the zeros and poles to filter coefficients
-            num_coeff, deno_coeff = signal.zpk2tf(self.zeros_complex,self.poles_complex, 1)
-            # Apply the filter
-            output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
-            
-            return output_signal
+  
 
-            
+    def apply_filter(self, input_signal):
+       # Convert the zeros and poles to filter coefficients
+       num_coeff, deno_coeff = signal.zpk2tf(self.zeros_complex, self.poles_complex, 1)
+       print("deno_coeff length:", len(deno_coeff))
+       # Apply the filter
+       output_signal = np.convolve(input_signal, num_coeff, mode='same') + np.convolve(input_signal, deno_coeff[1:], mode='same')
+       # Convert the output signal to a list of complex numbers
+       output_signal = [complex(real, imag) for real, imag in zip(output_signal.real, output_signal.imag)]
+       return output_signal
     
     # def calculate_filter_coeffs(self):
     #     # Convert the zeros and poles to filter coefficients

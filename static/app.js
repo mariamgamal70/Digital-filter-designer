@@ -189,3 +189,27 @@ function applyFilter() {
       console.error("Error fetching frequency response:", error);
     });
 }
+function updateFilter() {
+  const formData = new FormData(document.getElementById('filter-form'));
+  fetch('/getMagnitudeAndPhase', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Update the magnitude graph
+    Plotly.update(magnitudeGraph, {
+      x: [data.magnitude.x],
+      y: [data.magnitude.y]
+    });
+
+    // Update the phase graph
+    Plotly.update(phaseGraph, {
+      x: [data.phase.x],
+      y: [data.phase.y]
+    });
+  })
+  .catch(error => {
+    console.error('Error updating filter:', error);
+  });
+}
