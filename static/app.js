@@ -189,27 +189,45 @@ function applyFilter() {
       console.error("Error fetching frequency response:", error);
     });
 }
-function updateFilter() {
-  const formData = new FormData(document.getElementById('filter-form'));
-  fetch('/getMagnitudeAndPhase', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    // Update the magnitude graph
-    Plotly.update(magnitudeGraph, {
-      x: [data.magnitude.x],
-      y: [data.magnitude.y]
-    });
+magnitudeGraph.on('plotly_restyle', updateOutputSignal);
+phaseGraph.on('plotly_restyle', updateOutputSignal);
 
-    // Update the phase graph
-    Plotly.update(phaseGraph, {
-      x: [data.phase.x],
-      y: [data.phase.y]
-    });
-  })
-  .catch(error => {
-    console.error('Error updating filter:', error);
-  });
+function updateOutputSignal() {
+  if (filterUpdated) {
+    const complexForm = convertPolarToComplex();
+    const formData = new FormData();
+    formData.append("realZeros", complexForm.realZeros);
+    formData.append("realPoles", complexForm.realPoles);
+    formData.append("imgZeros", complexForm.imgZeros);
+    formData.append("imgPoles", complexForm.imgPoles);
+    fetch("/applyFilter", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Update the output signal plot with the filtered signal data
+        const outputTrace = {
+          x: data.time,
+          y: data.signal,
+          type: "scatter",
+          name: "Output Signal",
+        };
+        if (outputSignalGraph.data.length == 0) {
+          Plotly.addTraces(outputSignalGraph, outputTrace);
+        } else {
+          Plotly.deleteTraces(outputSignalGraph, 0);
+          Plotly.addTraces(outputSignalGraph, outputTrace);
+        }
+      })
+      .catch((error) => {
+        // Handle errors, e.g. display an error message to the user
+        console.error("Error applying filter:", error);
+      });
+  }
 }

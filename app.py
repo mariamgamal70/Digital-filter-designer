@@ -28,31 +28,12 @@ def getMagnitudeAndPhase():
     real_zeros_values = np.array([float(value) for element in real_zeros if element for value in element.split(',')])
     img_zeros_values = np.array([float(value) for element in img_zeros if element for value in element.split(',')])
     img_poles_values = np.array([float(value) for element in img_poles if element for value in element.split(',')])
-
     filters.set_real_poles(real_poles_values)
     filters.set_real_zeros(real_zeros_values)
     filters.set_img_zeros(img_zeros_values)
     filters.set_img_poles(img_poles_values)
-
-    # Calculate the filter coefficients based on the new zeros and poles
-    filters.calculate_filter_coeffs()
-
-    # Get the magnitude and phase response of the filter
-    magnitude_response, phase_response = filters.get_magnitude_phase_response()
-
-    # Return the magnitude and phase response as a JSON object
-    response = {
-        'magnitude': {
-            'x': list(magnitude_response[0]),
-            'y': list(magnitude_response[1])
-        },
-        'phase': {
-            'x': list(phase_response[0]),
-            'y': list(phase_response[1])
-        }
-    }
-
-    return jsonify(response)
+    
+    return jsonify(filters.get_magnitude_phase_response())
 
 @app.route('/applyFilter', methods=['POST'])
 def apply_filter_route():
