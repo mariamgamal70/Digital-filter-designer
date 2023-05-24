@@ -104,4 +104,17 @@ class Filter:
     #     filtered_data = signal.filtfilt(self.b_coeffs, self.a_coeffs, data)
     #     return filtered_data
 
-   
+    def getAllPassResponse(self,complex_num_str):
+        complex_number = complex(complex_num_str)
+
+        # Define the frequency range
+        frequency_range = np.linspace(0, np.pi, 1000)
+
+        # Calculate the allpass response
+        allpass_response = np.angle((complex_number - np.exp(1j * frequency_range)) / (complex_number.conjugate() * np.exp(1j * frequency_range) - 1))
+
+        response={
+            'frequency':frequency_range,
+            'allpassresponse':allpass_response
+        }
+        return response

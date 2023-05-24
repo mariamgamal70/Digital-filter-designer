@@ -218,31 +218,6 @@ function getFrequencyResponse() {
         type: "scatter",
         name: "Phase",
       };
-
-      // const traceReal = {
-      //   x: listItemArray,
-      //   y: realParts,
-      //   mode: 'lines',
-      //   name: 'Real Part',
-      //   line: {
-      //     color: 'red',
-      //   },
-      // };
-
-      // // Create the trace for the imaginary part
-      // const traceImaginary = {
-      //   x: listItemArray,
-      //   y: imaginaryParts,
-      //   mode: 'lines',
-      //   name: 'Imaginary Part',
-      //   line: {
-      //     color: 'blue',
-      //   },
-      // };
-
-      // // Create the data array with the traces
-      // const dataArray = [traceReal, traceImaginary];
-
       // Update the magnitude plot with the magnitude data
       if (magnitudeGraph.data.length == 0) {
         Plotly.addTraces(magnitudeGraph, magTrace);
@@ -264,14 +239,6 @@ function getFrequencyResponse() {
         Plotly.deleteTraces(OriginalPhaseGraph, 0);
         Plotly.addTraces(OriginalPhaseGraph, phaseTrace);
       }
-      // update All pass response in all-pass filter pop-up 
-      // if (allPassResponse.data.length ==0)
-      // {
-      //   plotly.addTraces(allPassResponse, dataArray);
-      // } else {
-      //   plotly.deleteTraces(allPassResponse,0);
-      //   plotly.addTraces(allPassResponse, dataArray);
-      // }
     })
     .catch((error) => {
       // Handle errors, e.g. display an error message to the user
@@ -280,93 +247,33 @@ function getFrequencyResponse() {
 }
 
 function plotAllPassFilterResponse() {
-
-  const complexNumbers = listItemArray.map((numberString) => {
-    const strippedString = numberString.replace('j', '');
-    const parts = strippedString.split('+');
-    const realPart = parseFloat(parts[0]);
-    console.log(realPart);
-    const imaginaryPart = parseFloat(parts[1]);
-    console.log(imaginaryPart);
-    return math.complex(realPart, imaginaryPart);
-  });
-  
-
-  const startFrequency = 0;  // Specify the starting frequency
-  const endFrequency = 1000; // Specify the ending frequency
-  const frequencyStep = 10; // Specify the frequency step
-  
-  // const frequencies = [];
-  for (let f = startFrequency; f <= endFrequency; f += frequencyStep) {
-    frequencies.push(f);
-  }
-
-  const frequencies = complexNumbers.map((number) => math.abs(number));
-  const phaseAngles = complexNumbers.map((number) => math.arg(number));
-
-  const traceMagnitude = {
-    x: frequencies,
-    y: Array(frequencies.length).fill(1), // All-pass filter has a constant magnitude of 1
-    name: 'Magnitude',
-    type: 'scatter',
-  };
-
-  const tracePhase = {
-    x: frequencies,
-    y: phaseAngles,
-    name: 'Phase Response',
-    type: 'line',
-  };
-
-  const Data = [traceMagnitude, tracePhase];
-  console.log(traceMagnitude);
-  console.log(tracePhase);
-
-
-  // Clear the existing graph (if any) and add the new traces
-  if (allPassResponse.data.length == 0) {
-    Plotly.addTraces(allPassResponse, Data);
-  } else {
-    Plotly.deleteTraces(allPassResponse, 0);
-    Plotly.addTraces(allPassResponse, Data);
-  }
+    const formData = new FormData();
+    const complexNumber = listItemArray[0].toString();
+    console.log(complexNumber);
+    formData.append("complexno", complexNumber);
+  fetch("/getAllPass", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const allPassResponseTrace = {
+        x: data.frequency,
+        y: data.allpassresponse,
+        type: "scatter",
+        name: "AllPass response",
+      };
+       if (allPassResponse.data.length == 0) {
+         Plotly.addTraces(allPassResponse, allPassResponseTrace);
+       } else {
+         Plotly.deleteTraces(allPassResponse, 0);
+         Plotly.addTraces(allPassResponse, allPassResponseTrace);
+       }
+    });
 }
 
-
-
-
-// function plotAllPassFilterResponse() {
-//   const complexNumbers = listItemArray.map((numberString) => {
-//     const strippedString = numberString.replace('j', '');
-//     const parts = strippedString.split('+');
-//     const realPart = parseFloat(parts[0]);
-//     const imaginaryPart = parseFloat(parts[1]);
-//     return math.complex(realPart, imaginaryPart);
-//   });
-
-//   const realParts = complexNumbers.map((number) => number.re);
-//   const imaginaryParts = complexNumbers.map((number) => number.im);
-
-//   const traceReal = {
-//     x: listItemArray,
-//     y: realParts,
-//     name: 'Real Part',
-//     type: 'line',
-//   };
-//   const traceImaginary = {
-//     x: listItemArray,
-//     y: imaginaryParts,
-//     name: 'Imaginary Part',
-//     type: 'line',
-//   };
-
-//   const data = [traceReal, traceImaginary];
-
-//   //update All pass response in all-pass filter pop-up 
-//   if (allPassResponse.data.length == 0) {
-//     Plotly.addTraces(allPassResponse, data);
-//   } else {
-//     Plotly.deleteTraces(allPassResponse, 0);
-//     Plotly.addTraces(allPassResponse, data);
-//   }
-// }

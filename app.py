@@ -50,8 +50,6 @@ def apply_filter_route():
     response = {'filteredData': filtered_data}
     return jsonify(response)
 
-
-
 @app.route('/allPass', methods=['POST', 'GET'])
 def applyAllPass():
     filters = Filter()
@@ -67,6 +65,15 @@ def applyAllPass():
         'total phase': list(filters.resultAllPassFilter)
     }, indent=None)
     return response_data
-     
+
+@app.route('/getAllPass', methods=['POST'])
+def getAllPass():
+    complex_num_str = request.form['complexno']
+    allpass_response_trace= filters.getAllPassResponse(complex_num_str)
+    # Convert ndarray to a list
+    allpass_response_trace['frequency'] = allpass_response_trace['frequency'].tolist()
+    allpass_response_trace['allpassresponse'] = allpass_response_trace['allpassresponse'].tolist()
+    return json.dumps(allpass_response_trace)
+
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
