@@ -6,9 +6,11 @@ const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
 const OriginalPhaseGraph= document.getElementById("originalphase");
-// const OrignialPhase =  document.getElementById("originalphase");
+
+
 let time = 50;
-let uploadedSignal = {};
+let uploadedSignal = { x: [], y: [] };
+let outputSignal = { x: [], y: [] };
 
 window.addEventListener("load", function () {
   createPlot(magnitudeGraph);
@@ -63,63 +65,107 @@ function createPlot(graphElement) {
   });
 }
 
+let inputSignalInterval;
+let outputSignalInterval;
 
-function plotSignal(data, graphElement) {
+// function plotSignal(data, graphElement) {
   //if first channel set the minTick=0 and maxTick=4 that is going to change to view plot as if realtime
-  let plottingPointIndex = 0;
-  let minTick = 0;
-  let maxTick = 4;
+  let inputPlottingPointIndex = 0;
+  let outputPlottingPointIndex = 0;
+  let inputMinTick = 0;
+  let inputMaxTick = 4;
+  let outputMinTick = 0;
+  let outputMaxTick = 4;
   //set plottingPointIndex=0 to increment to go through all the points in signal
-  let plottingInterval;
-  let time;
-  Plotly.relayout(graphElement, {
-    "xaxis.fixedrange": false,
-    dragmode: "pan",
-  });
+  // let plottingInterval;
+  // let time;
+  // Plotly.relayout(graphElement, {
+  //   "xaxis.fixedrange": false,
+  //   dragmode: "pan",
+  // });
   //function that plots point by point and change the time interval accordingly to plot dynamically
-  function actualPlotting() {
-    if (plottingPointIndex < data.x.length) {
+  function inputPlotting() {
+    if (inputPlottingPointIndex < uploadedSignal.x.length) {
       Plotly.extendTraces(
-        graphElement,
+        inputSignalGraph,
         {
-          x: [[data.x[plottingPointIndex]]],
-          y: [[data.y[plottingPointIndex]]],
+          x: [[uploadedSignal.x[inputPlottingPointIndex]]],
+          y: [[uploadedSignal.y[inputPlottingPointIndex]]],
         },
         [0]
       );
-      plottingPointIndex++;
+      inputPlottingPointIndex++;
       //if condition used to change the time interval dynamically
-      if (data.x[plottingPointIndex] > maxTick) {
-        minTick = maxTick;
-        maxTick += 4;
-        Plotly.relayout(graphElement, {
-          "xaxis.range": [minTick, maxTick],
+      if (uploadedSignal.x[inputPlottingPointIndex] > inputMaxTick) {
+        inputMinTick = inputMaxTick;
+        inputMaxTick += 4;
+        Plotly.relayout(inputSignalGraph, {
+          "xaxis.range": [inputMinTick, inputMaxTick],
           "xaxis.tickmode": "linear",
           "xaxis.dtick": 1,
         });
       }
     } else {
-      clearInterval(plottingInterval);
+      inputPlottingPointIndex=0;
+      inputMinTick = 0;
+      inputMaxTick = 4;
+      clearInterval(inputSignalInterval);
     }
   }
+
+    function outputPlotting() {
+      if (outputPlottingPointIndex < outputSignal.x.length) {
+        Plotly.extendTraces(
+          outputSignalGraph,
+          {
+            x: [[outputSignal.x[outputPlottingPointIndex]]],
+            y: [[outputSignal.y[outputPlottingPointIndex]]],
+          },
+          [0]
+        );
+        outputPlottingPointIndex++;
+        //if condition used to change the time interval dynamically
+        if (outputSignal.x[outputPlottingPointIndex] > outputMaxTick) {
+          outputMinTick = outputMaxTick;
+          outputMaxTick += 4;
+          Plotly.relayout(outputSignalGraph, {
+            "xaxis.range": [outputMinTick, outputMaxTick],
+            "xaxis.tickmode": "linear",
+            "xaxis.dtick": 1,
+          });
+        }
+      } else {
+          outputPlottingPointIndex = 0;
+          outputMinTick = 0;
+          outputMaxTick = 4;
+          clearInterval(outputSignalInterval);
+      }
+    }
+
   //function that starts plotting asynchronously
-  function startInterval() {
-    if (plottingInterval) {
-      clearInterval(plottingInterval);
+  function startInputInterval() {
+    if (inputSignalInterval) {
+      clearInterval(inputSignalInterval);
     }
-    plottingInterval = setInterval(actualPlotting, time);
+    inputSignalInterval = setInterval(inputPlotting, time);
   }
-  //start plotting
-  startInterval();
+
+  function startOutputInterval() {
+    if (outputSignalInterval) {
+      clearInterval(outputSignalInterval);
+    }
+    outputSignalInterval = setInterval(outputPlotting, time);
+  }
 
   //eventlistener for cine speed sliders
-  graphSpeed.addEventListener("change", () => {
+    graphSpeed.addEventListener("change", () => {
     time = parseInt(graphSpeed.value);
     document.getElementById("rangevalue").innerHTML = `${graphSpeed.value}%`;
     //restart plottingInterval in order to apply speed changes
-    startInterval();
+    startInputInterval();
+    startOutputInterval();
   });
-}
+// }
 
 function convertCsvToTrace(csvdata) {
   // Extract data from the CSV data
@@ -128,7 +174,7 @@ function convertCsvToTrace(csvdata) {
   uploadedSignal = { x: x, y: y };
   // If there are no existing signals, add the uploaded signal as a trace to the plot else add the uploaded signal as a component to the plot
   Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
-  plotSignal(uploadedSignal, inputSignalGraph);
+  startInputInterval();
   applyFilter(); 
 }
 
@@ -159,33 +205,60 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
-function applyFilter() {
-  const formData = new FormData();
-  formData.append("amplitude", uploadedSignal.y);
-  console.log(uploadedSignal.y);
-  fetch("/applyFilter", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("filter failed");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      let outputsignal = { x: uploadedSignal.x, y: data.filteredData };
-      if (outputSignalGraph.data.length==0){
-        Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
-      }else{
-        Plotly.deleteTraces(outputSignalGraph, 0);
-        Plotly.addTraces(outputSignalGraph, outputsignal);
-      }
-      plotSignal(outputsignal, outputSignalGraph);
-      }
-    )
-    .catch((error) => {
-      // Handle errors, e.g. display an error message to the user
-      console.error("Error fetching frequency response:", error);
+// function applyFilter() {
+//   const formData = new FormData();
+//   formData.append("amplitude", uploadedSignal.y);
+//   fetch("/applyFilter", {
+//     method: "POST",
+//     body: formData,
+//   })
+//     .then((response) => {
+//       if (!response.ok) {
+//         throw new Error("filter failed");
+//       }
+//       return response.json();
+//     })
+//     .then((data) => {
+//       outputsignal = { x: uploadedSignal.x, y: data.filteredData };
+//       if (outputSignalGraph.data.length==0){
+//         Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
+//       }else{
+//         Plotly.deleteTraces(outputSignalGraph, 0);
+//         Plotly.addTraces(outputSignalGraph, outputsignal);
+//       }
+//       // plotSignal(outputsignal, outputSignalGraph);
+//       startOutputInterval();
+//       }
+//     )
+//     .catch((error) => {
+//       // Handle errors, e.g. display an error message to the user
+//       console.error("Error fetching frequency response:", error);
+//     });
+// }
+
+async function applyFilter() {
+    const formData = new FormData();
+    formData.append("amplitude", uploadedSignal.y);
+
+    const response = await fetch("/applyFilter", {
+      method: "POST",
+      body: formData,
     });
+
+    if (!response.ok) {
+      throw new Error("Filter failed");
+    }
+
+    const data = await response.json();
+
+    outputSignal = { x: uploadedSignal.x, y: data.filteredData };
+
+    if (outputSignalGraph.data.length == 0) {
+      Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
+    } else {
+      Plotly.deleteTraces(outputSignalGraph, 0);
+      Plotly.addTraces(outputSignalGraph, outputsignal);
+    }
+    
+    startOutputInterval();
 }

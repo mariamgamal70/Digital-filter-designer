@@ -153,6 +153,7 @@ function clearAll() {
   clearPoles();
   Plotly.deleteTraces(magnitudeGraph, 0);
   Plotly.deleteTraces(phaseGraph, 0);
+  Plotly.deleteTraces(outputSignalGraph, 0);
 }
 
 function convertToPolarCoordinates() {
@@ -195,6 +196,7 @@ function convertPolarToComplex(){
 }
 
 function getFrequencyResponse() {
+  applyFilter();
   const complexForm = convertPolarToComplex();
   const formData = new FormData();
   formData.append("realZeros", complexForm.realZeros);
