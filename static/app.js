@@ -7,10 +7,18 @@ const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
 const OriginalPhaseGraph= document.getElementById("originalphase");
 
-
 let time = 50;
 let uploadedSignal = { x: [], y: [] };
 let outputSignal = { x: [], y: [] };
+
+let inputSignalInterval;
+let outputSignalInterval;
+let inputPlottingPointIndex = 0;
+let outputPlottingPointIndex = 0;
+let inputMinTick = 0;
+let inputMaxTick = 0.3;
+let outputMinTick = 0;
+let outputMaxTick = 0.3;
 
 window.addEventListener("load", function () {
   createPlot(magnitudeGraph);
@@ -65,24 +73,6 @@ function createPlot(graphElement) {
   });
 }
 
-let inputSignalInterval;
-let outputSignalInterval;
-
-// function plotSignal(data, graphElement) {
-  //if first channel set the minTick=0 and maxTick=4 that is going to change to view plot as if realtime
-  let inputPlottingPointIndex = 0;
-  let outputPlottingPointIndex = 0;
-  let inputMinTick = 0;
-  let inputMaxTick = 0.3;
-  let outputMinTick = 0;
-  let outputMaxTick = 0.3;
-  //set plottingPointIndex=0 to increment to go through all the points in signal
-  // let plottingInterval;
-  // let time;
-  // Plotly.relayout(graphElement, {
-  //   "xaxis.fixedrange": false,
-  //   dragmode: "pan",
-  // });
   //function that plots point by point and change the time interval accordingly to plot dynamically
   function inputPlotting() {
     if (inputPlottingPointIndex < uploadedSignal.x.length) {
@@ -205,37 +195,6 @@ uploadSignal.addEventListener("change", (event) => {
   };
 });
 
-// function applyFilter() {
-//   const formData = new FormData();
-//   formData.append("amplitude", uploadedSignal.y);
-//   fetch("/applyFilter", {
-//     method: "POST",
-//     body: formData,
-//   })
-//     .then((response) => {
-//       if (!response.ok) {
-//         throw new Error("filter failed");
-//       }
-//       return response.json();
-//     })
-//     .then((data) => {
-//       outputsignal = { x: uploadedSignal.x, y: data.filteredData };
-//       if (outputSignalGraph.data.length==0){
-//         Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
-//       }else{
-//         Plotly.deleteTraces(outputSignalGraph, 0);
-//         Plotly.addTraces(outputSignalGraph, outputsignal);
-//       }
-//       // plotSignal(outputsignal, outputSignalGraph);
-//       startOutputInterval();
-//       }
-//     )
-//     .catch((error) => {
-//       // Handle errors, e.g. display an error message to the user
-//       console.error("Error fetching frequency response:", error);
-//     });
-// }
-
 async function applyFilter() {
     const formData = new FormData();
     formData.append("amplitude", uploadedSignal.y);
@@ -256,10 +215,5 @@ async function applyFilter() {
     if (outputSignalGraph.data.length == 0) {
       Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
     } 
-    // else {
-    //   const newData = outputSignal.y.slice(outputPlottingPointIndex); // Get the new data from the current index onwards
-    //   Plotly.extendTraces(outputSignalGraph, { y: [newData] }, [0]); // Extend the existing trace with the new data
-    // }
-    
     startOutputInterval();
 }

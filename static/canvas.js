@@ -163,17 +163,6 @@ function convertToPolarCoordinates() {
   for (let shape of shapes) {
     let x = ((shape.x - 150) / 150).toFixed(4); // Calculate the center x-coordinate of the shape and round to 2 decimal places
     let y = ((150 - shape.y) / 150).toFixed(4); // Calculate the center y-coordinate of the shape and round to 2 decimal places
-
-    // // Check if x is 0.0 or -0.0 and take its absolute value
-    // if (x === "0.00" || x === "-0.00") {
-    //   x = 0.00;
-    // }
-
-    // // Check if y is 0.0 or -0.0 and take its absolute value
-    // if (y === "0.00" || y === "-0.00") {
-    //   y = 0.00;
-    // }
-
     // Convert the x and y coordinates to polar coordinates
     const radius = Math.sqrt((x)** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
     const angle = Math.atan2(y, x); // Angle in radians
