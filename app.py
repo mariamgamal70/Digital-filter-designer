@@ -6,16 +6,19 @@ import json
 import os
 import pandas as pd
 from flask import redirect, url_for
-from filters import Filters
+from filters import filters
 import math
+
 app = Flask(__name__)
 
-filter_object =Filters([(0+0j)],[(0+0j)])
+# filter_object =filters([(0+0j)],[(0+0j)])
+filter_object = filters()
+filter_object.set_real_poles([(0+0j)]) 
 
-def polar_to_rectangular(radius, angle):
-    real = radius * math.cos(angle)
-    imaginary = radius * math.sin(angle)
-    return real, imaginary
+# def polar_to_rectangular(radius, angle):
+#     real = radius * math.cos(angle)
+#     imaginary = radius * math.sin(angle)
+#     return real, imaginary
 
 @app.route('/')
 def home():
@@ -32,12 +35,12 @@ def getMagnitudeAndPhase():
     real_zeros_values = np.array([float(value) for element in real_zeros if element for value in element.split(',')])
     img_zeros_values = np.array([float(value) for element in img_zeros if element for value in element.split(',')])
     img_poles_values = np.array([float(value) for element in img_poles if element for value in element.split(',')])
-    Filters.set_real_poles(real_poles_values)
-    Filters.set_real_zeros(real_zeros_values)
-    Filters.set_img_zeros(img_zeros_values)
-    Filters.set_img_poles(img_poles_values)
+    filters.set_real_poles(real_poles_values)
+    filters.set_real_zeros(real_zeros_values)
+    filters.set_img_zeros(img_zeros_values)
+    filters.set_img_poles(img_poles_values)
     
-    return jsonify(Filters.get_magnitude_phase_response())
+    return jsonify(filters.get_magnitude_phase_response())
 
 @app.route('/allPass', methods=['POST','GET'])
 def applyAllPass():

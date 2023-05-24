@@ -4,7 +4,7 @@ import numpy as np
 from scipy import signal
 import scipy
 
-class Filters:
+class filters:
     def __init__(self) :
         self.phaseResponse=np.zeros(512)
         self.allPassResponse=np.zeros(512)
@@ -40,8 +40,8 @@ class Filters:
         self.zeros_complex=[]
         self.poles_complex=[]
         self.norm_freq=[]
-        #  self.magnitudeResponse=[]
-        # self.phaseResponse=[]
+        self.magnitudeResponse=[]
+        self.phaseResponse=[]
         for real, img in zip(self.real_poles_values, self.img_poles_values):
             if real and img:
                 self.poles_complex.append(complex(float(real), float(img)))
