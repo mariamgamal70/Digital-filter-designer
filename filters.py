@@ -6,8 +6,9 @@ import scipy
 
 class filters:
     def __init__(self) :
-        self.phaseResponse=np.zeros(512)
-        self.allPassResponse=np.zeros(512)
+        self.mag=[]
+        self.phase=[]
+        self.allPassResponse=[np.zeros(512)]
         self.resultAllPassFilter=[]
         self.real_poles_values=[]
         self.real_zeros_values=[]
@@ -16,7 +17,6 @@ class filters:
         self.zeros_complex=[]
         self.poles_complex=[]
         self.norm_freq=[]
-        self.magnitudeResponse=[]
         self.frequencies=[]
        
 
@@ -36,12 +36,13 @@ class filters:
         # self.img_zeros_values=[]
         self.img_zeros_values = values
     
+   
     def get_magnitude_phase_response(self):
         self.zeros_complex=[]
         self.poles_complex=[]
         self.norm_freq=[]
-        self.magnitudeResponse=[]
-        self.phaseResponse=[]
+        self.mag=[]
+        self.phase=[]
         for real, img in zip(self.real_poles_values, self.img_poles_values):
             if real and img:
                 self.poles_complex.append(complex(float(real), float(img)))
@@ -58,16 +59,15 @@ class filters:
         # Calculate the frequency response using the zeros and poles
         freq, complex_gain = signal.freqz_zpk(self.zeros_complex, self.poles_complex, 1)
         self.norm_freq = freq / max(freq)
-        self.magnitudeResponse = 20 * np.log10(np.abs(complex_gain))
-        self.phaseResponse = np.unwrap(np.angle(complex_gain))
+        self.mag = 20 * np.log10(np.abs(complex_gain))
+        self.phase = np.unwrap(np.angle(complex_gain))
         # Convert the frequency response to two separate arrays for magnitude and phase
         response = {
         'frequency': np.array(self.norm_freq).tolist(),
-        'magnitude': np.array(self.magnitudeResponse).tolist(),
-        'phase': np.array(self.phaseResponse).tolist()
+        'magnitude': np.array(self.mag).tolist(),
+        'phase': np.array(self.phase).tolist()
     }
         return response
-  
    
     def allPass_Filter(self, filtercoeffients):
        phaseAngles=np.zeros(512)
@@ -82,6 +82,6 @@ class filters:
            
        
     def resultFilter(self):
-        self.resultAllPassFilter=np.add(self.allPassResponse,self.phaseResponse)
+        self.resultAllPassFilter=np.add(self.allPassResponse,self.phase)
         
         
