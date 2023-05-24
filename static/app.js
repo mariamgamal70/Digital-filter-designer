@@ -255,6 +255,7 @@ function handleDropdownItemClick(event) {
     // Show the card
     document.getElementById('selectedItemsCard').style.display = 'block';
   }
+  plotAllPassFilterResponse();
 }
 
 function handleCustomizeOptionClick(event) {
@@ -300,6 +301,7 @@ function handleAddButtonClick(event) {
   } else {
     alert('Invalid custom value. Please enter a value in the form x+yj.');
   }
+  plotAllPassFilterResponse();
 }
 
 
@@ -408,38 +410,3 @@ function applyAllPassFilter() {
 //   }
 // }
 
-function plotAllPassFilterResponse() {
-  const complexNumbers = listItemArray.map((numberString) => {
-    const strippedString = numberString.replace('j', '');
-    const parts = strippedString.split('+');
-    const realPart = parseFloat(parts[0]);
-    const imaginaryPart = parseFloat(parts[1]);
-    return math.complex(realPart, imaginaryPart);
-  });
-
-  const frequencies = complexNumbers.map((number) => math.abs(number));
-  const phaseAngles = complexNumbers.map((number) => math.arg(number));
-
-  const traceMagnitude = {
-    x: frequencies,
-    y: Array(frequencies.length).fill(1), // All-pass filter has a constant magnitude of 1
-    name: 'Magnitude',
-    type: 'scatter',
-  };
-
-  const tracePhase = {
-    x: frequencies,
-    y: phaseAngles,
-    name: 'Phase',
-    type: 'scatter',
-  };
-
-  const data = [traceMagnitude, tracePhase];
-
-  // Clear the existing graph (if any) and add the new traces
-  if (allPassResponse) {
-    Plotly.newPlot('allPassResponse', data);
-  } else {
-    Plotly.addTraces('allPassResponse', data);
-  }
-}

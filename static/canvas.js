@@ -5,10 +5,10 @@ const conjugateButton = document.getElementById("conjugate");
 const clearAllButton = document.getElementById("clearall");
 const canvasContainer = document.getElementById("canvascontainer");
 let unitCircleCanvas = document.getElementById("unitcirclecanva");
-let lastAddedElement=null;
+let lastAddedElement = null;
 let zeros = [];
 let poles = [];
-let filterUpdated=false;
+let filterUpdated = false;
 
 let context = unitCircleCanvas.getContext("2d");
 context.beginPath();
@@ -45,21 +45,21 @@ unitCircleCanvas.addEventListener("click", (event) => {
 
 clearAllButton.addEventListener("click", clearAll);
 
-function conjugatePoleHandler(){
-    createPole(lastAddedElement.x, 300 - lastAddedElement.y);
+function conjugatePoleHandler() {
+  createPole(lastAddedElement.x, 300 - lastAddedElement.y);
 }
 
 function conjugateZeroHandler() {
-    createZero(lastAddedElement.x, 300 - lastAddedElement.y);
+  createZero(lastAddedElement.x, 300 - lastAddedElement.y);
 }
 
 function createZero(x, y) {
   const zero = document.createElement("div");
   zero.className = "zero";
-  zero.style.left = x - 5 + "px";   
+  zero.style.left = x - 5 + "px";
   zero.style.top = y - 5 + "px";
   canvasContainer.appendChild(zero);
-  zeros.push({element:zero,x:x,y:y});
+  zeros.push({ element: zero, x: x, y: y });
   zero.addEventListener("click", () => {
     if (deleteButton.checked) {
       canvasContainer.removeChild(zero);
@@ -154,7 +154,7 @@ function clearAll() {
   clearPoles();
   Plotly.deleteTraces(magnitudeGraph, 0);
   Plotly.deleteTraces(phaseGraph, 0);
-  outputSignal=uploadedSignal;
+  outputSignal = uploadedSignal;
   startOutputInterval();
 }
 
@@ -164,17 +164,17 @@ function convertToPolarCoordinates() {
     let x = ((shape.x - 150) / 150).toFixed(4); // Calculate the center x-coordinate of the shape and round to 2 decimal places
     let y = ((150 - shape.y) / 150).toFixed(4); // Calculate the center y-coordinate of the shape and round to 2 decimal places
     // Convert the x and y coordinates to polar coordinates
-    const radius = Math.sqrt((x)** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
+    const radius = Math.sqrt((x) ** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
     const angle = Math.atan2(y, x); // Angle in radians
     // Store the polar coordinates in the shape's data attributes
     shape.radius = radius;
     shape.angle = angle;
   }
 }
-function convertPolarToComplex(){
-  let realZeros=zeros.map(zero=>zero.radius*Math.cos(zero.angle));
-  let realPoles=poles.map(pole=>pole.radius*Math.cos(pole.angle));
-  let imgZeros=zeros.map(zero=>zero.radius*Math.sin(zero.angle));
+function convertPolarToComplex() {
+  let realZeros = zeros.map(zero => zero.radius * Math.cos(zero.angle));
+  let realPoles = poles.map(pole => pole.radius * Math.cos(pole.angle));
+  let imgZeros = zeros.map(zero => zero.radius * Math.sin(zero.angle));
   let imgPoles = poles.map((pole) => pole.radius * Math.sin(pole.angle));
   return {
     realZeros: realZeros,
@@ -192,7 +192,7 @@ function getFrequencyResponse() {
   formData.append("realPoles", complexForm.realPoles);
   formData.append("imgZeros", complexForm.imgZeros);
   formData.append("imgPoles", complexForm.imgPoles);
-  filterUpdated=true;
+  filterUpdated = true;
   fetch("/getMagnitudeAndPhase", {
     method: "POST",
     body: formData,
@@ -216,7 +216,7 @@ function getFrequencyResponse() {
         type: "scatter",
         name: "Phase",
       };
-      
+
       // const traceReal = {
       //   x: listItemArray,
       //   y: realParts,
@@ -240,7 +240,6 @@ function getFrequencyResponse() {
 
       // // Create the data array with the traces
       // const dataArray = [traceReal, traceImaginary];
-
 
       // Update the magnitude plot with the magnitude data
       if (magnitudeGraph.data.length == 0) {
@@ -277,3 +276,80 @@ function getFrequencyResponse() {
       console.error("Error fetching frequency response:", error);
     });
 }
+function plotAllPassFilterResponse() {
+  const complexNumbers = listItemArray.map((numberString) => {
+    const strippedString = numberString.replace('j', '');
+    const parts = strippedString.split('+');
+    const realPart = parseFloat(parts[0]);
+    console.log(realPart);
+    const imaginaryPart = parseFloat(parts[1]);
+    console.log(imaginaryPart);
+    return math.complex(realPart, imaginaryPart);
+  });
+
+  const frequencies = complexNumbers.map((number) => math.abs(number));
+  const phaseAngles = complexNumbers.map((number) => math.arg(number));
+
+  const traceMagnitude = {
+    x: frequencies,
+    y: Array(frequencies.length).fill(1), // All-pass filter has a constant magnitude of 1
+    name: 'Magnitude',
+    type: 'scatter',
+  };
+
+  const tracePhase = {
+    x: frequencies,
+    y: phaseAngles,
+    name: 'Phase',
+    type: 'scatter',
+  };
+
+  const Data = [traceMagnitude, tracePhase];
+
+  // Clear the existing graph (if any) and add the new traces
+  if (allPassResponse.data.length == 0) {
+    Plotly.addTraces(allPassResponse, Data);
+  } else {
+    Plotly.deleteTraces(allPassResponse, 0);
+    Plotly.addTraces(allPassResponse, Data);
+  }
+}
+
+
+
+
+// function plotAllPassFilterResponse() {
+//   const complexNumbers = listItemArray.map((numberString) => {
+//     const strippedString = numberString.replace('j', '');
+//     const parts = strippedString.split('+');
+//     const realPart = parseFloat(parts[0]);
+//     const imaginaryPart = parseFloat(parts[1]);
+//     return math.complex(realPart, imaginaryPart);
+//   });
+
+//   const realParts = complexNumbers.map((number) => number.re);
+//   const imaginaryParts = complexNumbers.map((number) => number.im);
+
+//   const traceReal = {
+//     x: listItemArray,
+//     y: realParts,
+//     name: 'Real Part',
+//     type: 'line',
+//   };
+//   const traceImaginary = {
+//     x: listItemArray,
+//     y: imaginaryParts,
+//     name: 'Imaginary Part',
+//     type: 'line',
+//   };
+
+//   const data = [traceReal, traceImaginary];
+
+//   //update All pass response in all-pass filter pop-up 
+//   if (allPassResponse.data.length == 0) {
+//     Plotly.addTraces(allPassResponse, data);
+//   } else {
+//     Plotly.deleteTraces(allPassResponse, 0);
+//     Plotly.addTraces(allPassResponse, data);
+//   }
+// }
