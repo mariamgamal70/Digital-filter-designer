@@ -216,6 +216,10 @@ function getFrequencyResponse() {
         type: "scatter",
         name: "Phase",
       };
+      const allpassTrace={
+        x: data.listItemArray,
+        y: realParts,
+      }
       // Update the magnitude plot with the magnitude data
       if (magnitudeGraph.data.length == 0) {
         Plotly.addTraces(magnitudeGraph, magTrace);
@@ -236,6 +240,14 @@ function getFrequencyResponse() {
       } else {
         Plotly.deleteTraces(OriginalPhaseGraph, 0);
         Plotly.addTraces(OriginalPhaseGraph, phaseTrace);
+      }
+      // update All pass response in all-pass filter pop-up 
+      if (allPassResponse.data.length ==0)
+      {
+        plotly.addTraces(allPassResponse, allpassTrace);
+      } else {
+        plotly.deleteTraces(allPassResponse,0);
+        plotly.addTraces(allPassResponse, allpassTrace);
       }
     })
     .catch((error) => {

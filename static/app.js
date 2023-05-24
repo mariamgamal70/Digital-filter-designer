@@ -7,9 +7,14 @@ const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
 const OriginalPhaseGraph= document.getElementById("originalphase");
 
+const realParts = complexNumbers.map((number) => number.re);
+const imaginaryParts = complexNumbers.map((number) => number.im);
+
 let time = 50;
 let uploadedSignal = { x: [], y: [] };
 let outputSignal = { x: [], y: [] };
+
+var listItemArray = [];
 
 let inputSignalInterval;
 let outputSignalInterval;
@@ -304,41 +309,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function applyAllPassFilter(){
- filters=[]
- fetch('/allpass', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(listItemArray)
-})
-  .then(function(response) {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error('Request failed with status ' + response.status);
-    }
-  })
-  .then(function(responseData) {
-    var dict_data = JSON.parse(responseData);
-    // makePlotly_trackpad(
-    //   dict_data["frequency"],
-    //   dict_data["phase"],
-    //   null,
-    //   null,
-    //   "allpass",
-    //   "Allpass"
-    // );
-    // var phase = dict_data["phase"];
-    // var phase_frequency = dict_data["frequency"];
-    // // Continue with the rest of the code
-  })
-  .catch(function(error) {
-    console.error('Error:', error);
-    // Handle any error that occurred during the request
+function plotComplex(){
+  const complexNumbers = listItemArray.map((numberString) => {
+    const strippedString = numberString.replace('j', '');
+    const parts = strippedString.split('+');
+    const realPart = parseFloat(parts[0]);
+    const imaginaryPart = parseFloat(parts[1]);
+    return math.complex(realPart, imaginaryPart);
   });
-
 }
-
-
