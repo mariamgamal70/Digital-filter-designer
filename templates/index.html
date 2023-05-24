@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,117 +18,125 @@
     <script src="path/to/splide.min.js"></script>
     <title>Digital Filter Designer</title>
 </head>
+
 <body>
     <header class="bg-primary mb-2 text-light p-1 d-flex justify-content-between">
         <h4 class="d-inline">Digital Filter Designer</h4>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Phase Correction
+            Phase Correction
         </button>
     </header>
     <div class="d-flex justify-content-evenly">
-    <div class="d-flex flex-column justify-content-center ">
-        <div style="position: relative; left: 25px;" id="canvascontainer" ><canvas id="unitcirclecanva" width="300" height="300" style="border: 1px solid #d3d3d388" class="border rounded-circle" ></canvas></div>
-        <br>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="zero" autocomplete="off" >
-            <label class="btn btn-outline-primary" for="zero">Zero</label>
-        
-            <input type="radio" class="btn-check" name="btnradio" id="pole" autocomplete="off">
-            <label class="btn btn-outline-primary" for="pole">Pole</label>
-        </div>
-        <br>
-        <div>
-            <button type="button" class="btn btn-outline-primary w-100" id="conjugate">Add Conjugate</button>
-        </div>
-        <br>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="delete" autocomplete="off">
-            <label class="btn btn-outline-primary" for="delete">Delete</label>
-        </div>
-        <br>
-        <div>
-            <button type="button" class="btn btn-outline-primary w-100" id="clearall">Clear All</button>
-        </div>
-        <div class="my-3">
-            <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
-            <input class="form-control" type="file" id="uploadsignal">
-        </div>
-</div>
+        <div class="d-flex flex-column justify-content-center ">
+            <div style="position: relative; left: 25px;" id="canvascontainer"><canvas id="unitcirclecanva" width="300"
+                    height="300" style="border: 1px solid #d3d3d388" class="border rounded-circle"></canvas></div>
+            <br>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradio" id="zero" autocomplete="off">
+                <label class="btn btn-outline-primary" for="zero">Zero</label>
 
-<div class="d-flex flex-column">
-    <div class="border border-primary rounded mb-1">
-        <div id="magnitude"  style="width:500px;height:300px;"></div>
-    </div>
-    <div class="border border-primary rounded" >
-        <div id="phase" style="width:500px;height: 300px;"></div>
-    </div>
-</div>
-<div>
-
-    <div class="border border-primary  rounded mb-1">
-        <div id="inputsignal" style="width:500px;height: 300px;"></div>
-    </div>
-    <div class="border border-primary rounded" >
-        <div id="outputsignal" style="width:500px;height: 300px;"></div>
-    </div>
-    <br>
-    <div class='d-inline-block w-100'>
-        <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
-        <span id="rangevalue">0%</span>
-    </div>
-    <br><br>
-</div>
-</div>
-
- <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-max modal-dialog-scrollable">
-        <div class="modal-content text-dark">
-            <div class="modal-header td">
-                <h3 class="modal-title fs-5" id="exampleModalLabel">All-pass filter</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <input type="radio" class="btn-check" name="btnradio" id="pole" autocomplete="off">
+                <label class="btn btn-outline-primary" for="pole">Pole</label>
             </div>
-            <div class="modal-body">
-                <div class="proberty">
-                    <div class="row">
-                        <div class="col">
-                            <!--All-Pass response -->
-                            <div class="border border-primary rounded mb-1  ">
-                                <div id="All-Pass" style="width:600px;height:300px;"></div>
+            <br>
+            <div>
+                <button type="button" class="btn btn-outline-primary w-100" id="conjugate">Add Conjugate</button>
+            </div>
+            <br>
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check" id="delete" autocomplete="off">
+                <label class="btn btn-outline-primary" for="delete">Delete</label>
+            </div>
+            <br>
+            <div>
+                <button type="button" class="btn btn-outline-primary w-100" id="clearall">Clear All</button>
+            </div>
+            <div class="my-3">
+                <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
+                <input class="form-control" type="file" id="uploadsignal">
+            </div>
+        </div>
+
+        <div class="d-flex flex-column">
+            <div class="border border-primary rounded mb-1">
+                <div id="magnitude" style="width:500px;height:300px;"></div>
+            </div>
+            <div class="border border-primary rounded">
+                <div id="phase" style="width:500px;height: 300px;"></div>
+            </div>
+        </div>
+        <div>
+
+            <div class="border border-primary  rounded mb-1">
+                <div id="inputsignal" style="width:500px;height: 300px;"></div>
+            </div>
+            <div class="border border-primary rounded">
+                <div id="outputsignal" style="width:500px;height: 300px;"></div>
+            </div>
+            <br>
+            <div class='d-inline-block w-100'>
+                <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
+                <span id="rangevalue">0%</span>
+            </div>
+            <br><br>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-max modal-dialog-scrollable">
+            <div class="modal-content text-dark">
+                <div class="modal-header td">
+                    <h3 class="modal-title fs-5" id="exampleModalLabel">All-pass filter</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="proberty">
+                        <div class="row">
+                            <div class="col">
+                                <!--All-Pass response -->
+                                <div class="border border-primary rounded mb-1  ">
+                                    <div id="All-Pass" style="width:600px;height:300px;"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <!-- Original Phase-->
-                            <div class="border border-primary rounded">
-                                <div id="originalphase" style="width:600px;height: 300px;"></div>
+                            <div class="col">
+                                <!-- Original Phase-->
+                                <div class="border border-primary rounded">
+                                    <div id="originalphase" style="width:600px;height: 300px;"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle me-4 dropdown-wide" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Select desired All-pass
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-light">
-                                    <li><a class="dropdown-item" href="#">1+0.5j</a></li>
-                                    <li><a class="dropdown-item" href="#">1+2j</a></li>
-                                    <li><a class="dropdown-item" href="#">1+1j</a></li>
-                                    <li><a class="dropdown-item" href="#">4+0.5j</a></li>
-                                    <li><a class="dropdown-item" href="#">0</a></li>
-                                    <li><a class="dropdown-item customize-option" href="#">Customize</a></li>
-                                </ul>
-                                <button type="button" class="btn btn-outline-primary add-button">Add</button>
-                                <button type="button" class="btn btn-outline-primary delete-button" id="deleteButton">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
-                            <div class="input-group mt-2">
-                                <input type="text" class="form-control custom-input-container" id="customInputContainer"
-                                    placeholder="Enter desired value" style="display: none;">
-                            </div>
-                            <ul id="selectedItemsList" class="mt-4"></ul>
-                            <!--<label for="dropdown">Select an option:</label>
+                            <div class="col-2">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle me-4 dropdown-wide" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select desired All-pass
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-light">
+                                        <li><a class="dropdown-item" href="#">1+0.5j</a></li>
+                                        <li><a class="dropdown-item" href="#">1+2j</a></li>
+                                        <li><a class="dropdown-item" href="#">1+1j</a></li>
+                                        <li><a class="dropdown-item" href="#">4+0.5j</a></li>
+                                        <li><a class="dropdown-item" href="#">0</a></li>
+                                        <li><a class="dropdown-item customize-option" href="#">Customize</a></li>
+                                    </ul>
+                                    <button type="button" class="btn btn-outline-primary add-button">Add</button>
+                                    <button type="button" class="btn btn-outline-primary delete-button"
+                                        id="deleteButton">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group mt-2">
+                                    <input type="text" class="form-control custom-input-container"
+                                        id="customInputContainer" placeholder="Enter desired value"
+                                        style="display: none;">
+                                </div>
+                                <div class="card mt-4" id="selectedItemsCard" style="width: 18rem; display: none;">
+                                    <ul class="list-group list-group-flush" id="selectedItemsList"></ul>
+                                </div>
+
+                                <!-- <ul id="selectedItemsList" class="mt-4"></ul> -->
+                                <!--<label for="dropdown">Select an option:</label>
                             <select id="dropdown" name="dropdown">
                               <option value="option1">1+0.5j </option>
                               <option value="option2">1+1j </option>
@@ -142,80 +151,80 @@
                               <label for="customInput">Custom Value:</label>
                               <input type="text" id="customInput" name="customInput">
                             </div>-->
-                        </div>
-                    </div><br><br>
-
-                    <!--Slider-->
-                    <div class="container" id="slider">
-                        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators">
-                                <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
-                                <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
-                            </ol>
-
-                            <!-- Slides -->
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <div class="row">
-                                        <div class="col">
-                                            <img src="/static/images/img6.jpg" alt="Image 1">
-                                        </div>
-                                        <div class="col">
-                                            <img src="/static/images/img7.jpg" alt="Image 2">
-                                        </div>
-                                        <div class="col">
-                                            <img src="/static/images/img8.jpg" alt="Image 3">
-                                        </div>
-                                        <div class="col">
-                                            <img src="/static/images/img8.jpg" alt="Image 4">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="carousel-item">
-                                    <div class="row">
-                                        <div class="col">
-                                            <img src="/static/images/img7.jpg" alt="Image 1">
-                                        </div>
-                                        <div class="col">
-                                            <img src="/static/images/img7.jpg" alt="Image 2">
-                                        </div>
-                                        <div class="col">
-                                            <img src="/static/images/img8.jpg" alt="Image 3">
-                                        </div>
-                                        <div class="col">
-                                            <img src="/static/images/img7.jpg" alt="Image 4">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
+                        </div><br><br>
+
+                        <!--Slider-->
+                        <div class="container" id="slider">
+                            <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators">
+                                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
+                                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
+                                </ol>
+
+                                <!-- Slides -->
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <div class="row">
+                                            <div class="col">
+                                                <img src="/static/images/img6.jpg" alt="Image 1">
+                                            </div>
+                                            <div class="col">
+                                                <img src="/static/images/img7.jpg" alt="Image 2">
+                                            </div>
+                                            <div class="col">
+                                                <img src="/static/images/img8.jpg" alt="Image 3">
+                                            </div>
+                                            <div class="col">
+                                                <img src="/static/images/img8.jpg" alt="Image 4">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="carousel-item">
+                                        <div class="row">
+                                            <div class="col">
+                                                <img src="/static/images/img7.jpg" alt="Image 1">
+                                            </div>
+                                            <div class="col">
+                                                <img src="/static/images/img7.jpg" alt="Image 2">
+                                            </div>
+                                            <div class="col">
+                                                <img src="/static/images/img8.jpg" alt="Image 3">
+                                            </div>
+                                            <div class="col">
+                                                <img src="/static/images/img7.jpg" alt="Image 4">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-                            <!-- Controls -->
-                            <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </a>
+                                <!-- Controls -->
+                                <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Apply</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Apply</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="/static/canvas.js"></script>
-    <script src="/static/app.js"></script>
-    <!--<script>
+        <script src="/static/canvas.js"></script>
+        <script src="/static/app.js"></script>
+        <!--<script>
         $(document).ready(function () {
             $('.dropdown-menu a.dropdown-item').click(function (e) {
                 e.preventDefault();
@@ -289,4 +298,5 @@
 
     </script>-->
 </body>
+
 </html>

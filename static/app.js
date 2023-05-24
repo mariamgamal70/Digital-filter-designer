@@ -245,13 +245,17 @@ function handleDropdownItemClick(event) {
 
     var listItem = document.createElement('li');
     listItem.textContent = listItemValue;
-    document.getElementById('selectedItemsList').appendChild(listItem);
+    listItem.className = 'list-group-item'; // Add class to list item
+
+    var selectedItemsList = document.getElementById('selectedItemsList');
+    selectedItemsList.appendChild(listItem);
 
     // Push the list item value into the array
     listItemArray.push(listItemValue);
+    // Show the card
+    document.getElementById('selectedItemsCard').style.display = 'block';
   }
 }
-
 
 function handleCustomizeOptionClick(event) {
   event.preventDefault();
@@ -262,18 +266,40 @@ function handleAddButtonClick(event) {
   var customValue = document.getElementById('customInputContainer').value;
   if (isValidCustomValue(customValue)) {
     var listItemValue = customValue; // Get only the value from the input
+
+    // Create the card element
+    var card = document.createElement('div');
+    card.classList.add('card');
+    card.style.width = '18rem';
+
+    // Create the list element
+    var list = document.createElement('ul');
+    list.classList.add('list-group', 'list-group-flush');
+
+    // Create the list item
     var listItem = document.createElement('li');
+    listItem.classList.add('list-group-item');
     listItem.textContent = listItemValue;
-    document.getElementById('selectedItemsList').appendChild(listItem);
+
+    // Append the list item to the list
+    list.appendChild(listItem);
+
+    // Append the list to the card
+    card.appendChild(list);
+
+    // Append the card to the selected items list
+    document.getElementById('selectedItemsList').appendChild(card);
+
     document.getElementById('customInputContainer').value = '';
     document.getElementById('customInputContainer').style.display = 'none';
 
     // Push the list item value into the array
     listItemArray.push(listItemValue);
+    // Show the card
+    document.getElementById('selectedItemsCard').style.display = 'block';
   } else {
     alert('Invalid custom value. Please enter a value in the form x+yj.');
   }
-  console.log(listItemArray);
 }
 
 
@@ -283,25 +309,21 @@ function isValidCustomValue(value) {
 }
 
 function handleDeleteButtonClick() {
-  if (listItemArray.length > 0) {
-    // Remove the last item from the array
-    var deletedItem = listItemArray.pop();
+  var selectedItemsList = document.getElementById('selectedItemsList');
+  var remainingItems = document.querySelectorAll('#selectedItemsList li');
+  if (remainingItems.length === 0) {
+    // Hide the card if there are no items
+    document.getElementById('selectedItemsCard').style.display = 'none';
+  } else {
+    // Remove the last card from the list
+    var cardToRemove = selectedItemsList.lastElementChild;
+    selectedItemsList.removeChild(cardToRemove);
 
-    // Remove the corresponding list item from the list
-    var selectedItemsList = document.getElementById('selectedItemsList');
-    var listItemToRemove = selectedItemsList.lastElementChild;
-    selectedItemsList.removeChild(listItemToRemove);
-
-    // Check if any remaining items are present
-    if (listItemArray.length > 0) {
-      var remainingItems = document.querySelectorAll('#selectedItemsList li');
-      var lastItemIndex = remainingItems.length - 1;
-
-      // Add the 'active' class to the last item
-      remainingItems[lastItemIndex].classList.add('active');
-    }
+    // Remove the corresponding item from the array
+    listItemArray.pop();
   }
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
   var dropdownItems = document.querySelectorAll('.dropdown-menu a.dropdown-item');
@@ -317,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var deleteButton = document.querySelector('#deleteButton');
   deleteButton.addEventListener('click', handleDeleteButtonClick);
+
 
 });
 
