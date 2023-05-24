@@ -323,7 +323,10 @@ function handleDeleteButtonClick() {
 
     // Remove the corresponding item from the array
     listItemArray.pop();
+    Plotly.deleteTraces(allPassResponse);
+    
   }
+
 }
 
 

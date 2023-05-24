@@ -22,6 +22,8 @@ context.lineTo(150, 300);
 context.stroke();
 context.closePath();
 
+
+
 unitCircleCanvas.addEventListener("click", (event) => {
   const rect = unitCircleCanvas.getBoundingClientRect();
   //client is distance from start of viewport till point clicked in the div
@@ -276,7 +278,9 @@ function getFrequencyResponse() {
       console.error("Error fetching frequency response:", error);
     });
 }
+
 function plotAllPassFilterResponse() {
+
   const complexNumbers = listItemArray.map((numberString) => {
     const strippedString = numberString.replace('j', '');
     const parts = strippedString.split('+');
@@ -286,6 +290,16 @@ function plotAllPassFilterResponse() {
     console.log(imaginaryPart);
     return math.complex(realPart, imaginaryPart);
   });
+  
+
+  const startFrequency = 0;  // Specify the starting frequency
+  const endFrequency = 1000; // Specify the ending frequency
+  const frequencyStep = 10; // Specify the frequency step
+  
+  // const frequencies = [];
+  for (let f = startFrequency; f <= endFrequency; f += frequencyStep) {
+    frequencies.push(f);
+  }
 
   const frequencies = complexNumbers.map((number) => math.abs(number));
   const phaseAngles = complexNumbers.map((number) => math.arg(number));
@@ -300,11 +314,14 @@ function plotAllPassFilterResponse() {
   const tracePhase = {
     x: frequencies,
     y: phaseAngles,
-    name: 'Phase',
-    type: 'scatter',
+    name: 'Phase Response',
+    type: 'line',
   };
 
   const Data = [traceMagnitude, tracePhase];
+  console.log(traceMagnitude);
+  console.log(tracePhase);
+
 
   // Clear the existing graph (if any) and add the new traces
   if (allPassResponse.data.length == 0) {

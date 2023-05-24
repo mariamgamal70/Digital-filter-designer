@@ -103,3 +103,5 @@ class Filter:
     #     # Apply the filter to the data using the filtfilt function
     #     filtered_data = signal.filtfilt(self.b_coeffs, self.a_coeffs, data)
     #     return filtered_data
+
+   
