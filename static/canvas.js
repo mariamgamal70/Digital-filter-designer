@@ -27,6 +27,7 @@ unitCircleCanvas.addEventListener("click", (event) => {
   //client is distance from start of viewport till point clicked in the div
   //rect is the distance from the viewport till the start of the div
   //the difference between them is the distance from the start of div till point clicked
+  applyFilter();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   if (addZeroButton.checked) {
@@ -153,7 +154,8 @@ function clearAll() {
   clearPoles();
   Plotly.deleteTraces(magnitudeGraph, 0);
   Plotly.deleteTraces(phaseGraph, 0);
-  Plotly.deleteTraces(outputSignalGraph, 0);
+  outputSignal=uploadedSignal;
+  startOutputInterval();
 }
 
 function convertToPolarCoordinates() {
@@ -171,12 +173,10 @@ function convertToPolarCoordinates() {
     // if (y === "0.00" || y === "-0.00") {
     //   y = 0.00;
     // }
-    console.log("x", x, "y", y);
 
     // Convert the x and y coordinates to polar coordinates
     const radius = Math.sqrt((x)** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
     const angle = Math.atan2(y, x); // Angle in radians
-    console.log(angle);
     // Store the polar coordinates in the shape's data attributes
     shape.radius = radius;
     shape.angle = angle;

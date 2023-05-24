@@ -40,7 +40,6 @@ def apply_filter_route():
     # Get the input data from the request
     data = request.form.getlist('amplitude')
     data = [float(value) for element in data for value in element.split(',')]
-    print("data",data)
     # Calculate the filter coefficients from the zeros and poles
     # filters.calculate_filter_coeffs()
     # Apply the filter to the data

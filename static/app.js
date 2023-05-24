@@ -73,9 +73,9 @@ let outputSignalInterval;
   let inputPlottingPointIndex = 0;
   let outputPlottingPointIndex = 0;
   let inputMinTick = 0;
-  let inputMaxTick = 4;
+  let inputMaxTick = 0.3;
   let outputMinTick = 0;
-  let outputMaxTick = 4;
+  let outputMaxTick = 0.3;
   //set plottingPointIndex=0 to increment to go through all the points in signal
   // let plottingInterval;
   // let time;
@@ -108,39 +108,39 @@ let outputSignalInterval;
     } else {
       inputPlottingPointIndex=0;
       inputMinTick = 0;
-      inputMaxTick = 4;
+      inputMaxTick = 0.3;
       clearInterval(inputSignalInterval);
     }
   }
 
-    function outputPlotting() {
-      if (outputPlottingPointIndex < outputSignal.x.length) {
-        Plotly.extendTraces(
-          outputSignalGraph,
-          {
-            x: [[outputSignal.x[outputPlottingPointIndex]]],
-            y: [[outputSignal.y[outputPlottingPointIndex]]],
-          },
-          [0]
-        );
-        outputPlottingPointIndex++;
-        //if condition used to change the time interval dynamically
-        if (outputSignal.x[outputPlottingPointIndex] > outputMaxTick) {
-          outputMinTick = outputMaxTick;
-          outputMaxTick += 4;
-          Plotly.relayout(outputSignalGraph, {
-            "xaxis.range": [outputMinTick, outputMaxTick],
-            "xaxis.tickmode": "linear",
-            "xaxis.dtick": 1,
-          });
-        }
-      } else {
-          outputPlottingPointIndex = 0;
-          outputMinTick = 0;
-          outputMaxTick = 4;
-          clearInterval(outputSignalInterval);
+  function outputPlotting() {
+    if (outputPlottingPointIndex < outputSignal.x.length) {
+      Plotly.extendTraces(
+        outputSignalGraph,
+        {
+          x: [[outputSignal.x[outputPlottingPointIndex]]],
+          y: [[outputSignal.y[outputPlottingPointIndex]]],
+        },
+        [0]
+      );
+      outputPlottingPointIndex++;
+      //if condition used to change the time interval dynamically
+      if (outputSignal.x[outputPlottingPointIndex] > outputMaxTick) {
+        outputMinTick = outputMaxTick;
+        outputMaxTick += 4;
+        Plotly.relayout(outputSignalGraph, {
+          "xaxis.range": [outputMinTick, outputMaxTick],
+          "xaxis.tickmode": "linear",
+          "xaxis.dtick": 1,
+        });
       }
+    } else {
+        outputPlottingPointIndex = 0;
+        outputMinTick = 0;
+        outputMaxTick = 0.3;
+        clearInterval(outputSignalInterval);
     }
+  }
 
   //function that starts plotting asynchronously
   function startInputInterval() {
@@ -255,10 +255,11 @@ async function applyFilter() {
 
     if (outputSignalGraph.data.length == 0) {
       Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
-    } else {
-      Plotly.deleteTraces(outputSignalGraph, 0);
-      Plotly.addTraces(outputSignalGraph, outputsignal);
-    }
+    } 
+    // else {
+    //   const newData = outputSignal.y.slice(outputPlottingPointIndex); // Get the new data from the current index onwards
+    //   Plotly.extendTraces(outputSignalGraph, { y: [newData] }, [0]); // Extend the existing trace with the new data
+    // }
     
     startOutputInterval();
 }
