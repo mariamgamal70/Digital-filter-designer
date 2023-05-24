@@ -1,8 +1,15 @@
 from scipy import signal
 import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import scipy
+
 
 class Filter:
     def __init__(self) :
+        self.allPassResponse=[np.zeros(512)]
+        self.resultAllPassFilter=[]
+        self.frequencies=[]
         self.real_poles_values=[]
         self.real_zeros_values=[]
         self.img_zeros_values=[]
@@ -71,6 +78,23 @@ class Filter:
             return output_signal
 
             
+    
+    def allPass_Filter(self, filtercoeffients):
+       phaseAngles=np.zeros(512)
+       for coeffient in filtercoeffients:
+            w, h =signal.freqz([-np.conj(coeffient), 1.0], [1.0, -coeffient])
+            angles = np.zeros(512) if coeffient==1 else np.unwrap(np.angle(h))
+            phaseAngles = np.add(phaseAngles, angles)
+            self.frequencies=w/max(w)
+            self.allPassResponse=phaseAngles
+            self.resultFilter()
+
+           
+       
+    def resultFilter(self):
+        self.resultAllPassFilter=np.add(self.allPassResponse,self.phase)
+    
+    
     
     # def calculate_filter_coeffs(self):
     #     # Convert the zeros and poles to filter coefficients

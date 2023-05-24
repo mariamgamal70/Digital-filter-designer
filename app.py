@@ -50,5 +50,23 @@ def apply_filter_route():
     response = {'filteredData': filtered_data}
     return jsonify(response)
 
+
+
+@app.route('/allPass', methods=['POST','GET'])
+def applyAllPass():
+    filters= json.loads(request.data)
+    coefficents=[]
+    for filter in filters:
+        complexFilter=complex(filter)
+        coefficents.append(complexFilter)
+    filters.allPass_Filter(coefficents)
+    response_data = json.dumps({
+        'frequency' : list(filters.frequencies),
+        'phase'     : list(filters.allpass_response),
+        'total phase':list(filters.total_phase_response)
+    })
+        
+    return jsonify(response_data)
+     
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
