@@ -52,21 +52,21 @@ def apply_filter_route():
 
 
 
-@app.route('/allPass', methods=['POST','GET'])
+@app.route('/allPass', methods=['POST', 'GET'])
 def applyAllPass():
-    filters= json.loads(request.data)
-    coefficents=[]
-    for filter in filters:
-        complexFilter=complex(filter)
-        coefficents.append(complexFilter)
-    filters.allPass_Filter(coefficents)
+    filters = Filter()
+    filters_data = json.loads(request.data)
+    coefficients = []
+    for filter_data in filters_data:
+        complex_filter = complex(filter_data)
+        coefficients.append(complex_filter)
+    filters.allPass_Filter(coefficients)
     response_data = json.dumps({
-        'frequency' : list(filters.frequencies),
-        'phase'     : list(filters.allpass_response),
-        'total phase':list(filters.total_phase_response)
-    })
-        
-    return jsonify(response_data)
+        'frequency': list(filters.frequencies),
+        'phase': list(filters.allPassResponse),
+        'total phase': list(filters.resultAllPassFilter)
+    }, indent=None)
+    return response_data
      
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

@@ -6,43 +6,42 @@ import scipy
 
 
 class Filter:
-    def __init__(self) :
-        self.allPassResponse=[np.zeros(512)]
-        self.resultAllPassFilter=[]
-        self.frequencies=[]
-        self.real_poles_values=[]
-        self.real_zeros_values=[]
-        self.img_zeros_values=[]
-        self.img_poles_values=[]
-        self.zeros_complex=[]
-        self.poles_complex=[]
-        self.norm_freq=[]
-        self.mag=[]
-        self.phase=[]
-        
+    def __init__(self):
+        self.allPassResponse = [np.zeros(512)]
+        self.resultAllPassFilter = []
+        self.frequencies = []
+        self.real_poles_values = []
+        self.real_zeros_values = []
+        self.img_zeros_values = []
+        self.img_poles_values = []
+        self.zeros_complex = []
+        self.poles_complex = []
+        self.norm_freq = []
+        self.mag = []
+        self.phase = []
 
-    def set_real_poles(self,values):
+    def set_real_poles(self, values):
         # self.real_poles_values=[]
         self.real_poles_values = values
-    
-    def set_real_zeros(self,values):
+
+    def set_real_zeros(self, values):
         # self.real_zeros_values=[]
         self.real_zeros_values = values
 
-    def set_img_poles(self,values):
+    def set_img_poles(self, values):
         # self.img_poles_values=[]
         self.img_poles_values = values
-    
-    def set_img_zeros(self,values):
+
+    def set_img_zeros(self, values):
         # self.img_zeros_values=[]
         self.img_zeros_values = values
-    
+
     def get_magnitude_phase_response(self):
-        self.zeros_complex=[]
-        self.poles_complex=[]
-        self.norm_freq=[]
-        self.mag=[]
-        self.phase=[]
+        self.zeros_complex = []
+        self.poles_complex = []
+        self.norm_freq = []
+        self.mag = []
+        self.phase = []
         for real, img in zip(self.real_poles_values, self.img_poles_values):
             if real and img:
                 self.poles_complex.append(complex(float(real), float(img)))
@@ -57,45 +56,43 @@ class Filter:
                 self.zeros_complex.remove(zero)
                 self.poles_complex.remove(zero)
         # Calculate the frequency response using the zeros and poles
-        freq, complex_gain = signal.freqz_zpk(self.zeros_complex, self.poles_complex, 1)
+        freq, complex_gain = signal.freqz_zpk(
+            self.zeros_complex, self.poles_complex, 1)
         self.norm_freq = freq / max(freq)
         self.mag = 20 * np.log10(np.abs(complex_gain))
         self.phase = np.unwrap(np.angle(complex_gain))
         # Convert the frequency response to two separate arrays for magnitude and phase
         response = {
-        'frequency': np.array(self.norm_freq).tolist(),
-        'magnitude': np.array(self.mag).tolist(),
-        'phase': np.array(self.phase).tolist()
-    }
+            'frequency': np.array(self.norm_freq).tolist(),
+            'magnitude': np.array(self.mag).tolist(),
+            'phase': np.array(self.phase).tolist()
+        }
         return response
-    
-    def apply_filter(self,inputsignal):
-            # Convert the zeros and poles to filter coefficients
-            num_coeff, deno_coeff = signal.zpk2tf(self.zeros_complex,self.poles_complex, 1)
-            # Apply the filter
-            output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
-            
-            return output_signal
 
-            
-    
-    def allPass_Filter(self, filtercoeffients):
-       phaseAngles=np.zeros(512)
-       for coeffient in filtercoeffients:
-            w, h =signal.freqz([-np.conj(coeffient), 1.0], [1.0, -coeffient])
-            angles = np.zeros(512) if coeffient==1 else np.unwrap(np.angle(h))
+    def apply_filter(self, inputsignal):
+        # Convert the zeros and poles to filter coefficients
+        num_coeff, deno_coeff = signal.zpk2tf(
+            self.zeros_complex, self.poles_complex, 1)
+        # Apply the filter
+        output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
+
+        return output_signal
+
+    def allPass_Filter(self, filter_coefficients):
+        phaseAngles = np.zeros(512)
+        for coefficient in filter_coefficients:
+            w, h = signal.freqz(
+                [-np.conj(coefficient), 1.0], [1.0, -coefficient])
+            angles = np.zeros(
+                512) if coefficient == 1 else np.unwrap(np.angle(h))
             phaseAngles = np.add(phaseAngles, angles)
-            self.frequencies=w/max(w)
-            self.allPassResponse=phaseAngles
-            self.resultFilter()
+        self.frequencies = w / max(w)
+        self.allPassResponse = phaseAngles
+        self.resultFilter()
 
-           
-       
     def resultFilter(self):
-        self.resultAllPassFilter=np.add(self.allPassResponse,self.phase)
-    
-    
-    
+        self.resultAllPassFilter = np.add(self.allPassResponse, self.phase)
+
     # def calculate_filter_coeffs(self):
     #     # Convert the zeros and poles to filter coefficients
     #     zeros = [complex(real, img) for real, img in zip(self.real_zeros_values, self.img_zeros_values)]
@@ -106,4 +103,3 @@ class Filter:
     #     # Apply the filter to the data using the filtfilt function
     #     filtered_data = signal.filtfilt(self.b_coeffs, self.a_coeffs, data)
     #     return filtered_data
-    

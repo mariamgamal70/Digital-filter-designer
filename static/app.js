@@ -7,9 +7,6 @@ const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
 const OriginalPhaseGraph= document.getElementById("originalphase");
 
-const realParts = complexNumbers.map((number) => number.re);
-const imaginaryParts = complexNumbers.map((number) => number.im);
-
 let time = 50;
 let uploadedSignal = { x: [], y: [] };
 let outputSignal = { x: [], y: [] };
@@ -279,15 +276,20 @@ function isValidCustomValue(value) {
 }
 
 function handleDeleteButtonClick() {
-  var selectedIndex = document.querySelector('#selectedItemsList li.active').index();
-  document.querySelector('#selectedItemsList li.active').remove();
+  var selectedItem = document.querySelector('#selectedItemsList li.active');
+  if (selectedItem) {
+    var selectedIndex = Array.from(selectedItem.parentNode.children).indexOf(selectedItem);
+    selectedItem.remove();
 
-  var remainingItems = document.querySelectorAll('#selectedItemsList li');
-  if (remainingItems.length > 0) {
-    if (selectedIndex === remainingItems.length) {
-      remainingItems[selectedIndex - 1].classList.add('active');
-    } else {
-      remainingItems[selectedIndex].classList.add('active');
+    listItemArray.splice(selectedIndex, 1); // Remove the item from the array
+
+    var remainingItems = document.querySelectorAll('#selectedItemsList li');
+    if (remainingItems.length > 0) {
+      if (selectedIndex === remainingItems.length) {
+        remainingItems[selectedIndex - 1].classList.add('active');
+      } else {
+        remainingItems[selectedIndex].classList.add('active');
+      }
     }
   }
 }
@@ -309,7 +311,35 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function plotComplex(){
+function applyAllPassFilter() {
+  filters = [];
+  fetch('/allPass', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(listItemArray)
+  })
+    .then(function(response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Request failed with status ' + response.status);
+      }
+    })
+    .then(function(responseData) {
+      var dict_data = responseData;
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+      // Handle any error that occurred during the request
+    });
+
+}
+
+ 
+ 
+function plotComplexNumbers() {
   const complexNumbers = listItemArray.map((numberString) => {
     const strippedString = numberString.replace('j', '');
     const parts = strippedString.split('+');
@@ -317,4 +347,31 @@ function plotComplex(){
     const imaginaryPart = parseFloat(parts[1]);
     return math.complex(realPart, imaginaryPart);
   });
+
+  const realParts = complexNumbers.map((number) => number.re);
+  const imaginaryParts = complexNumbers.map((number) => number.im);
+
+  const traceReal = {
+    x: listItemArray,
+    y: realParts,
+    name: 'Real Part',
+    type: 'scatter',
+  };
+  const traceImaginary = {
+    x: listItemArray,
+    y: imaginaryParts,
+    name: 'Imaginary Part',
+    type: 'scatter',
+  };
+
+  const data = [traceReal, traceImaginary];
+
+  //update All pass response in all-pass filter pop-up 
+      if (allPassResponse.data.length ==0)
+      {
+        plotly.addTraces(allPassResponse, data);
+      } else {
+        plotly.deleteTraces(allPassResponse,0);
+        plotly.addTraces(allPassResponse, data);
+      }
 }

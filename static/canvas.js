@@ -216,10 +216,32 @@ function getFrequencyResponse() {
         type: "scatter",
         name: "Phase",
       };
-      const allpassTrace={
-        x: data.listItemArray,
-        y: realParts,
-      }
+      
+      // const traceReal = {
+      //   x: listItemArray,
+      //   y: realParts,
+      //   mode: 'lines',
+      //   name: 'Real Part',
+      //   line: {
+      //     color: 'red',
+      //   },
+      // };
+
+      // // Create the trace for the imaginary part
+      // const traceImaginary = {
+      //   x: listItemArray,
+      //   y: imaginaryParts,
+      //   mode: 'lines',
+      //   name: 'Imaginary Part',
+      //   line: {
+      //     color: 'blue',
+      //   },
+      // };
+
+      // // Create the data array with the traces
+      // const dataArray = [traceReal, traceImaginary];
+
+
       // Update the magnitude plot with the magnitude data
       if (magnitudeGraph.data.length == 0) {
         Plotly.addTraces(magnitudeGraph, magTrace);
@@ -242,13 +264,13 @@ function getFrequencyResponse() {
         Plotly.addTraces(OriginalPhaseGraph, phaseTrace);
       }
       // update All pass response in all-pass filter pop-up 
-      if (allPassResponse.data.length ==0)
-      {
-        plotly.addTraces(allPassResponse, allpassTrace);
-      } else {
-        plotly.deleteTraces(allPassResponse,0);
-        plotly.addTraces(allPassResponse, allpassTrace);
-      }
+      // if (allPassResponse.data.length ==0)
+      // {
+      //   plotly.addTraces(allPassResponse, dataArray);
+      // } else {
+      //   plotly.deleteTraces(allPassResponse,0);
+      //   plotly.addTraces(allPassResponse, dataArray);
+      // }
     })
     .catch((error) => {
       // Handle errors, e.g. display an error message to the user
