@@ -277,3 +277,52 @@ function plotAllPassFilterResponse() {
     });
 }
 
+
+document.getElementById('applyPhaseCorrection').addEventListener('click', function() {
+  applyAllPassFilter();
+  
+});
+
+function applyAllPassFilter() {
+  const filters = listItemArray.map(filter => {
+    return { filter: filter };
+  });
+
+  fetch('/allPass', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(filters)
+  })
+    .then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Request failed with status ' + response.status);
+      }
+    })
+    .then(function (responseData) {
+      // const frequency = responseData.frequency;
+      // const phase = responseData.phase;
+      // const totalPhase = responseData.total_phase;
+
+      const totalPhase = {
+        x: responseData.frequency,
+        y: responseData.total_phase,
+        type: "scatter",
+        name: "PhaseCorrection",
+      };
+
+      if (OriginalPhaseGraph.data.length == 0) {
+        Plotly.addTraces(OriginalPhaseGraph, totalPhase);
+      } else {
+        Plotly.deleteTraces(OriginalPhaseGraph, 0);
+        Plotly.addTraces(OriginalPhaseGraph, totalPhase);
+      }
+    })
+    .catch(function (error) {
+      console.error('Error:', error);
+      // Handle any error that occurred during the request
+    });
+}

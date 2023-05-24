@@ -348,32 +348,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+document.getElementById('img1').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-0.75+0.75j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img2').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-0.92-0.65j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img3').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-1+1j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img4').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '0.5-0.94j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
 
-function applyAllPassFilter() {
-  filters = [];
-  fetch('/allPass', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(listItemArray)
-  })
-    .then(function (response) {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Request failed with status ' + response.status);
-      }
-    })
-    .then(function (responseData) {
-      var dict_data = responseData;
-    })
-    .catch(function (error) {
-      console.error('Error:', error);
-      // Handle any error that occurred during the request
-    });
+// function applyAllPassFilter() {
+//   filters = [];
+//   fetch('/allPass', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(listItemArray)
+//   })
+//     .then(function (response) {
+//       if (response.ok) {
+//         return response.json();
+//       } else {
+//         throw new Error('Request failed with status ' + response.status);
+//       }
+//     })
+//     .then(function (responseData) {
+//       var dict_data = responseData;
+//     })
+//     .catch(function (error) {
+//       console.error('Error:', error);
+//       // Handle any error that occurred during the request
+//     });
 
-}
+// }
 
 
 
