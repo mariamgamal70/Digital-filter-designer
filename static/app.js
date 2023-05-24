@@ -372,7 +372,43 @@ function applyAllPassFilter() {
 
 
 
-function plotComplexNumbers() {
+// function plotComplexNumbers() {
+//   const complexNumbers = listItemArray.map((numberString) => {
+//     const strippedString = numberString.replace('j', '');
+//     const parts = strippedString.split('+');
+//     const realPart = parseFloat(parts[0]);
+//     const imaginaryPart = parseFloat(parts[1]);
+//     return math.complex(realPart, imaginaryPart);
+//   });
+
+//   const realParts = complexNumbers.map((number) => number.re);
+//   const imaginaryParts = complexNumbers.map((number) => number.im);
+
+//   const traceReal = {
+//     x: listItemArray,
+//     y: realParts,
+//     name: 'Real Part',
+//     type: 'scatter',
+//   };
+//   const traceImaginary = {
+//     x: listItemArray,
+//     y: imaginaryParts,
+//     name: 'Imaginary Part',
+//     type: 'scatter',
+//   };
+
+//   const data = [traceReal, traceImaginary];
+
+//   //update All pass response in all-pass filter pop-up 
+//   if (allPassResponse.data.length == 0) {
+//     plotly.addTraces(allPassResponse, data);
+//   } else {
+//     plotly.deleteTraces(allPassResponse, 0);
+//     plotly.addTraces(allPassResponse, data);
+//   }
+// }
+
+function plotAllPassFilterResponse() {
   const complexNumbers = listItemArray.map((numberString) => {
     const strippedString = numberString.replace('j', '');
     const parts = strippedString.split('+');
@@ -381,29 +417,29 @@ function plotComplexNumbers() {
     return math.complex(realPart, imaginaryPart);
   });
 
-  const realParts = complexNumbers.map((number) => number.re);
-  const imaginaryParts = complexNumbers.map((number) => number.im);
+  const frequencies = complexNumbers.map((number) => math.abs(number));
+  const phaseAngles = complexNumbers.map((number) => math.arg(number));
 
-  const traceReal = {
-    x: listItemArray,
-    y: realParts,
-    name: 'Real Part',
-    type: 'scatter',
-  };
-  const traceImaginary = {
-    x: listItemArray,
-    y: imaginaryParts,
-    name: 'Imaginary Part',
+  const traceMagnitude = {
+    x: frequencies,
+    y: Array(frequencies.length).fill(1), // All-pass filter has a constant magnitude of 1
+    name: 'Magnitude',
     type: 'scatter',
   };
 
-  const data = [traceReal, traceImaginary];
+  const tracePhase = {
+    x: frequencies,
+    y: phaseAngles,
+    name: 'Phase',
+    type: 'scatter',
+  };
 
-  //update All pass response in all-pass filter pop-up 
-  if (allPassResponse.data.length == 0) {
-    plotly.addTraces(allPassResponse, data);
+  const data = [traceMagnitude, tracePhase];
+
+  // Clear the existing graph (if any) and add the new traces
+  if (allPassResponse) {
+    Plotly.newPlot('allPassResponse', data);
   } else {
-    plotly.deleteTraces(allPassResponse, 0);
-    plotly.addTraces(allPassResponse, data);
+    Plotly.addTraces('allPassResponse', data);
   }
 }
