@@ -78,20 +78,36 @@ class Filter:
 
         return output_signal
 
-    def allPass_Filter(self, filter_coefficients):
-        phaseAngles = np.zeros(512)
-        for coefficient in filter_coefficients:
-            w, h = signal.freqz(
-                [-np.conj(coefficient), 1.0], [1.0, -coefficient])
-            angles = np.zeros(
-                512) if coefficient == 1 else np.unwrap(np.angle(h))
-            phaseAngles = np.add(phaseAngles, angles)
-        self.frequencies = w / max(w)
-        self.allPassResponse = phaseAngles
-        self.resultFilter()
 
-    def resultFilter(self):
+    def allPass_Filter(self, complex_num_str):
+        complex_number = complex(complex_num_str)
+        phaseAngles = np.zeros(512)
+        w, h = signal.freqz(
+        [-np.conj(complex_number), 1.0], [1.0, -complex_number])
+        angles = np.zeros(512) if complex_number == 1 else np.unwrap(np.angle(h))
+        phaseAngles = np.add(phaseAngles, angles)
+        # self.frequencies = w / max(w)
+        self.allPassResponse = phaseAngles
         self.resultAllPassFilter = np.add(self.allPassResponse, self.phase)
+        response ={
+            'correctedphase': self.resultAllPassFilter
+        }
+        return response
+
+
+    def getAllPassResponse(self, complex_num_str):
+        complex_number = complex(complex_num_str)
+        # Define the frequency range
+        frequency_range = np.linspace(0, np.pi, 1000)
+        # Calculate the allpass response
+        allpass_response = np.angle((complex_number - np.exp(1j * frequency_range)) / (
+            complex_number.conjugate() * np.exp(1j * frequency_range) - 1))
+        response ={
+            'frequency': frequency_range,
+            'allpassresponse': allpass_response
+        }
+        return response
+
 
     # def calculate_filter_coeffs(self):
     #     # Convert the zeros and poles to filter coefficients
@@ -103,18 +119,3 @@ class Filter:
     #     # Apply the filter to the data using the filtfilt function
     #     filtered_data = signal.filtfilt(self.b_coeffs, self.a_coeffs, data)
     #     return filtered_data
-
-    def getAllPassResponse(self,complex_num_str):
-        complex_number = complex(complex_num_str)
-
-        # Define the frequency range
-        frequency_range = np.linspace(0, np.pi, 1000)
-
-        # Calculate the allpass response
-        allpass_response = np.angle((complex_number - np.exp(1j * frequency_range)) / (complex_number.conjugate() * np.exp(1j * frequency_range) - 1))
-
-        response={
-            'frequency':frequency_range,
-            'allpassresponse':allpass_response
-        }
-        return response
