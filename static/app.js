@@ -324,7 +324,7 @@ function handleDeleteButtonClick() {
     // Remove the corresponding item from the array
     listItemArray.pop();
     Plotly.deleteTraces(allPassResponse);
-    
+
   }
 
 }
@@ -374,8 +374,22 @@ function applyAllPassFilter() {
     });
 
 }
-
-
+document.getElementById('img1').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-0.75+0.75j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img2').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-0.92-0.65j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img3').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '-1+1j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
+document.getElementById('img4').addEventListener('click', function () {
+  document.getElementById('customInputContainer').value = '0.5-0.94j';
+  document.getElementById('customInputContainer').style.display = 'block';
+})
 
 // function plotComplexNumbers() {
 //   const complexNumbers = listItemArray.map((numberString) => {
