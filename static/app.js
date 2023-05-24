@@ -5,7 +5,7 @@ const outputSignalGraph = document.getElementById("outputsignal");
 const graphSpeed = document.getElementById("speed");
 const uploadSignal = document.getElementById("uploadsignal");
 const allPassResponse = document.getElementById("All-Pass");
-const OriginalPhaseGraph= document.getElementById("originalphase");
+const OriginalPhaseGraph = document.getElementById("originalphase");
 
 let time = 50;
 let uploadedSignal = { x: [], y: [] };
@@ -30,26 +30,27 @@ window.addEventListener("load", function () {
     "yaxis.title": "Amplitude (dB)",
   });
   createPlot(phaseGraph);
-  Plotly.relayout(phaseGraph, { 
+  Plotly.relayout(phaseGraph, {
     title: "Phase",
     "xaxis.title": "Frequency (Hz)",
     "yaxis.title": "Angle (radians)",
-   });
+  });
   createPlot(inputSignalGraph);
   Plotly.relayout(inputSignalGraph, { title: "Input Signal" });
   createPlot(outputSignalGraph);
   Plotly.relayout(outputSignalGraph, { title: "Output Signal" });
   createPlot(allPassResponse);
-  Plotly.relayout(allPassResponse, { title: "All-Pass response", 
+  Plotly.relayout(allPassResponse, {
+    title: "All-Pass response",
     "xaxis.title": "Frequency (Hz)",
     "yaxis.title": "Amplitude (dB)",
   });
   createPlot(OriginalPhaseGraph);
-  Plotly.relayout(OriginalPhaseGraph, { 
+  Plotly.relayout(OriginalPhaseGraph, {
     title: "Orignial Phase",
     "xaxis.title": "Frequency (Hz)",
     "yaxis.title": "Angle (radians)",
-   });
+  });
 });
 
 function createPlot(graphElement) {
@@ -75,88 +76,88 @@ function createPlot(graphElement) {
   });
 }
 
-  //function that plots point by point and change the time interval accordingly to plot dynamically
-  function inputPlotting() {
-    if (inputPlottingPointIndex < uploadedSignal.x.length) {
-      Plotly.extendTraces(
-        inputSignalGraph,
-        {
-          x: [[uploadedSignal.x[inputPlottingPointIndex]]],
-          y: [[uploadedSignal.y[inputPlottingPointIndex]]],
-        },
-        [0]
-      );
-      inputPlottingPointIndex++;
-      //if condition used to change the time interval dynamically
-      if (uploadedSignal.x[inputPlottingPointIndex] > inputMaxTick) {
-        inputMinTick = inputMaxTick;
-        inputMaxTick += 4;
-        Plotly.relayout(inputSignalGraph, {
-          "xaxis.range": [inputMinTick, inputMaxTick],
-          "xaxis.tickmode": "linear",
-          "xaxis.dtick": 1,
-        });
-      }
-    } else {
-      inputPlottingPointIndex=0;
-      inputMinTick = 0;
-      inputMaxTick = 0.3;
-      clearInterval(inputSignalInterval);
+//function that plots point by point and change the time interval accordingly to plot dynamically
+function inputPlotting() {
+  if (inputPlottingPointIndex < uploadedSignal.x.length) {
+    Plotly.extendTraces(
+      inputSignalGraph,
+      {
+        x: [[uploadedSignal.x[inputPlottingPointIndex]]],
+        y: [[uploadedSignal.y[inputPlottingPointIndex]]],
+      },
+      [0]
+    );
+    inputPlottingPointIndex++;
+    //if condition used to change the time interval dynamically
+    if (uploadedSignal.x[inputPlottingPointIndex] > inputMaxTick) {
+      inputMinTick = inputMaxTick;
+      inputMaxTick += 4;
+      Plotly.relayout(inputSignalGraph, {
+        "xaxis.range": [inputMinTick, inputMaxTick],
+        "xaxis.tickmode": "linear",
+        "xaxis.dtick": 1,
+      });
     }
+  } else {
+    inputPlottingPointIndex = 0;
+    inputMinTick = 0;
+    inputMaxTick = 0.3;
+    clearInterval(inputSignalInterval);
   }
+}
 
-  function outputPlotting() {
-    if (outputPlottingPointIndex < outputSignal.x.length) {
-      Plotly.extendTraces(
-        outputSignalGraph,
-        {
-          x: [[outputSignal.x[outputPlottingPointIndex]]],
-          y: [[outputSignal.y[outputPlottingPointIndex]]],
-        },
-        [0]
-      );
-      outputPlottingPointIndex++;
-      //if condition used to change the time interval dynamically
-      if (outputSignal.x[outputPlottingPointIndex] > outputMaxTick) {
-        outputMinTick = outputMaxTick;
-        outputMaxTick += 4;
-        Plotly.relayout(outputSignalGraph, {
-          "xaxis.range": [outputMinTick, outputMaxTick],
-          "xaxis.tickmode": "linear",
-          "xaxis.dtick": 1,
-        });
-      }
-    } else {
-        outputPlottingPointIndex = 0;
-        outputMinTick = 0;
-        outputMaxTick = 0.3;
-        clearInterval(outputSignalInterval);
+function outputPlotting() {
+  if (outputPlottingPointIndex < outputSignal.x.length) {
+    Plotly.extendTraces(
+      outputSignalGraph,
+      {
+        x: [[outputSignal.x[outputPlottingPointIndex]]],
+        y: [[outputSignal.y[outputPlottingPointIndex]]],
+      },
+      [0]
+    );
+    outputPlottingPointIndex++;
+    //if condition used to change the time interval dynamically
+    if (outputSignal.x[outputPlottingPointIndex] > outputMaxTick) {
+      outputMinTick = outputMaxTick;
+      outputMaxTick += 4;
+      Plotly.relayout(outputSignalGraph, {
+        "xaxis.range": [outputMinTick, outputMaxTick],
+        "xaxis.tickmode": "linear",
+        "xaxis.dtick": 1,
+      });
     }
+  } else {
+    outputPlottingPointIndex = 0;
+    outputMinTick = 0;
+    outputMaxTick = 0.3;
+    clearInterval(outputSignalInterval);
   }
+}
 
-  //function that starts plotting asynchronously
-  function startInputInterval() {
-    if (inputSignalInterval) {
-      clearInterval(inputSignalInterval);
-    }
-    inputSignalInterval = setInterval(inputPlotting, time);
+//function that starts plotting asynchronously
+function startInputInterval() {
+  if (inputSignalInterval) {
+    clearInterval(inputSignalInterval);
   }
+  inputSignalInterval = setInterval(inputPlotting, time);
+}
 
-  function startOutputInterval() {
-    if (outputSignalInterval) {
-      clearInterval(outputSignalInterval);
-    }
-    outputSignalInterval = setInterval(outputPlotting, time);
+function startOutputInterval() {
+  if (outputSignalInterval) {
+    clearInterval(outputSignalInterval);
   }
+  outputSignalInterval = setInterval(outputPlotting, time);
+}
 
-  //eventlistener for cine speed sliders
-    graphSpeed.addEventListener("change", () => {
-    time = parseInt(graphSpeed.value);
-    document.getElementById("rangevalue").innerHTML = `${graphSpeed.value}%`;
-    //restart plottingInterval in order to apply speed changes
-    startInputInterval();
-    startOutputInterval();
-  });
+//eventlistener for cine speed sliders
+graphSpeed.addEventListener("change", () => {
+  time = parseInt(graphSpeed.value);
+  document.getElementById("rangevalue").innerHTML = `${graphSpeed.value}%`;
+  //restart plottingInterval in order to apply speed changes
+  startInputInterval();
+  startOutputInterval();
+});
 // }
 
 function convertCsvToTrace(csvdata) {
@@ -167,7 +168,7 @@ function convertCsvToTrace(csvdata) {
   // If there are no existing signals, add the uploaded signal as a trace to the plot else add the uploaded signal as a component to the plot
   Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
   startInputInterval();
-  applyFilter(); 
+  applyFilter();
 }
 
 // event listener to the file upload input element to trigger when a file is selected
@@ -198,26 +199,26 @@ uploadSignal.addEventListener("change", (event) => {
 });
 
 async function applyFilter() {
-    const formData = new FormData();
-    formData.append("amplitude", uploadedSignal.y);
+  const formData = new FormData();
+  formData.append("amplitude", uploadedSignal.y);
 
-    const response = await fetch("/applyFilter", {
-      method: "POST",
-      body: formData,
-    });
+  const response = await fetch("/applyFilter", {
+    method: "POST",
+    body: formData,
+  });
 
-    if (!response.ok) {
-      throw new Error("Filter failed");
-    }
+  if (!response.ok) {
+    throw new Error("Filter failed");
+  }
 
-    const data = await response.json();
+  const data = await response.json();
 
-    outputSignal = { x: uploadedSignal.x, y: data.filteredData };
+  outputSignal = { x: uploadedSignal.x, y: data.filteredData };
 
-    if (outputSignalGraph.data.length == 0) {
-      Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
-    } 
-    startOutputInterval();
+  if (outputSignalGraph.data.length == 0) {
+    Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
+  }
+  startOutputInterval();
 }
 
 
@@ -227,27 +228,30 @@ function handleDropdownItemClick(event) {
   var customInputVisible = document.getElementById('customInputContainer').style.display === 'block';
 
   if (selectedItemText !== 'Customize') {
-    var listItem;
+    var listItemValue;
     if (customInputVisible) {
       var customValue = document.getElementById('customInputContainer').value;
       if (isValidCustomValue(customValue)) {
-        listItem = document.createElement('li');
-        listItem.textContent = customValue;
+        listItemValue = customValue;
         document.getElementById('customInputContainer').value = '';
         document.getElementById('customInputContainer').style.display = 'none';
       } else {
         alert('Invalid custom value. Please enter a value in the form x+yj.');
+        return;
       }
     } else {
-      listItem = document.createElement('li');
-      listItem.textContent = selectedItemText;
+      listItemValue = selectedItemText;
     }
 
-    if (listItem && selectedItemText !== 'Customize') {
-      document.getElementById('selectedItemsList').appendChild(listItem);
-    }
+    var listItem = document.createElement('li');
+    listItem.textContent = listItemValue;
+    document.getElementById('selectedItemsList').appendChild(listItem);
+
+    // Push the list item value into the array
+    listItemArray.push(listItemValue);
   }
 }
+
 
 function handleCustomizeOptionClick(event) {
   event.preventDefault();
@@ -257,18 +261,21 @@ function handleAddButtonClick(event) {
   event.preventDefault();
   var customValue = document.getElementById('customInputContainer').value;
   if (isValidCustomValue(customValue)) {
+    var listItemValue = customValue; // Get only the value from the input
     var listItem = document.createElement('li');
-    listItem.textContent = customValue;
+    listItem.textContent = listItemValue;
     document.getElementById('selectedItemsList').appendChild(listItem);
     document.getElementById('customInputContainer').value = '';
     document.getElementById('customInputContainer').style.display = 'none';
 
-    // Push the list item into the array
-    listItemArray.push(listItem);
+    // Push the list item value into the array
+    listItemArray.push(listItemValue);
   } else {
     alert('Invalid custom value. Please enter a value in the form x+yj.');
   }
+  console.log(listItemArray);
 }
+
 
 function isValidCustomValue(value) {
   var pattern = /^[-+]?[\d]+(\.[\d]+)?[+-][\d]+(\.[\d]+)?[j]$/;
@@ -276,27 +283,29 @@ function isValidCustomValue(value) {
 }
 
 function handleDeleteButtonClick() {
-  var selectedItem = document.querySelector('#selectedItemsList li.active');
-  if (selectedItem) {
-    var selectedIndex = Array.from(selectedItem.parentNode.children).indexOf(selectedItem);
-    selectedItem.remove();
+  if (listItemArray.length > 0) {
+    // Remove the last item from the array
+    var deletedItem = listItemArray.pop();
 
-    listItemArray.splice(selectedIndex, 1); // Remove the item from the array
+    // Remove the corresponding list item from the list
+    var selectedItemsList = document.getElementById('selectedItemsList');
+    var listItemToRemove = selectedItemsList.lastElementChild;
+    selectedItemsList.removeChild(listItemToRemove);
 
-    var remainingItems = document.querySelectorAll('#selectedItemsList li');
-    if (remainingItems.length > 0) {
-      if (selectedIndex === remainingItems.length) {
-        remainingItems[selectedIndex - 1].classList.add('active');
-      } else {
-        remainingItems[selectedIndex].classList.add('active');
-      }
+    // Check if any remaining items are present
+    if (listItemArray.length > 0) {
+      var remainingItems = document.querySelectorAll('#selectedItemsList li');
+      var lastItemIndex = remainingItems.length - 1;
+
+      // Add the 'active' class to the last item
+      remainingItems[lastItemIndex].classList.add('active');
     }
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   var dropdownItems = document.querySelectorAll('.dropdown-menu a.dropdown-item');
-  dropdownItems.forEach(function(item) {
+  dropdownItems.forEach(function (item) {
     item.addEventListener('click', handleDropdownItemClick);
   });
 
@@ -306,8 +315,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var addButton = document.querySelector('.add-button');
   addButton.addEventListener('click', handleAddButtonClick);
 
-  var deleteButton = document.querySelector('.delete-button');
+  var deleteButton = document.querySelector('#deleteButton');
   deleteButton.addEventListener('click', handleDeleteButtonClick);
+
 });
 
 
@@ -320,25 +330,25 @@ function applyAllPassFilter() {
     },
     body: JSON.stringify(listItemArray)
   })
-    .then(function(response) {
+    .then(function (response) {
       if (response.ok) {
         return response.json();
       } else {
         throw new Error('Request failed with status ' + response.status);
       }
     })
-    .then(function(responseData) {
+    .then(function (responseData) {
       var dict_data = responseData;
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.error('Error:', error);
       // Handle any error that occurred during the request
     });
 
 }
 
- 
- 
+
+
 function plotComplexNumbers() {
   const complexNumbers = listItemArray.map((numberString) => {
     const strippedString = numberString.replace('j', '');
@@ -367,11 +377,10 @@ function plotComplexNumbers() {
   const data = [traceReal, traceImaginary];
 
   //update All pass response in all-pass filter pop-up 
-      if (allPassResponse.data.length ==0)
-      {
-        plotly.addTraces(allPassResponse, data);
-      } else {
-        plotly.deleteTraces(allPassResponse,0);
-        plotly.addTraces(allPassResponse, data);
-      }
+  if (allPassResponse.data.length == 0) {
+    plotly.addTraces(allPassResponse, data);
+  } else {
+    plotly.deleteTraces(allPassResponse, 0);
+    plotly.addTraces(allPassResponse, data);
+  }
 }
