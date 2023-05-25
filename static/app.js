@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.getElementById('img1').addEventListener('click', function () {
-  document.getElementById('customInputContainer').value = '-0.75+0.75j';
+  document.getElementById('customInputContainer').value = '1+0.1j';
   document.getElementById('customInputContainer').style.display = 'block';
 })
 document.getElementById('img2').addEventListener('click', function () {
@@ -357,7 +357,7 @@ document.getElementById('img2').addEventListener('click', function () {
   document.getElementById('customInputContainer').style.display = 'block';
 })
 document.getElementById('img3').addEventListener('click', function () {
-  document.getElementById('customInputContainer').value = '-1+1j';
+  document.getElementById('customInputContainer').value = '3+3j';
   document.getElementById('customInputContainer').style.display = 'block';
 })
 document.getElementById('img4').addEventListener('click', function () {
