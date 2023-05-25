@@ -72,5 +72,19 @@ def getAllPass():
     allpass_response_trace['allpassresponse'] = allpass_response_trace['allpassresponse'].tolist()
     return json.dumps(allpass_response_trace)
 
+@app.route('/allPassOuput', methods=['POST'])
+def getAllPassOutput():
+        filters_data = request.form.getlist("filters")
+        filter_strings = [item.strip() for item in filters_data[0].split(",")]
+        data = request.form.getlist('amplitude')
+        data = [float(value) for element in data for value in element.split(',')]
+        filtered_data= filters.allPassOutput(filter_strings,data)
+        # Convert complex numbers to a JSON serializable format
+        filtered_data = [value.real for value in filtered_data]
+        print("filtered_data",filtered_data)
+        # Return the filtered data as a JSON response
+        response = {'filteredData': filtered_data}
+        return jsonify(response)
+
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)

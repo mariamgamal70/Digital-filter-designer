@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import scipy
+from scipy.signal import tf2zpk
 
 
 class Filter:
@@ -75,7 +76,6 @@ class Filter:
             self.zeros_complex, self.poles_complex, 1)
         # Apply the filter
         output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
-
         return output_signal
 
 
@@ -107,6 +107,17 @@ class Filter:
         }
         return response
 
+    def allPassOutput(self, complex_num_str,inputsignal):
+        complex_arr= [ (complex(complexdata)) for complexdata in complex_num_str]
+        # conjugate_arr= np.conjugate(complex_arr)
+        # convert complex coefficients to real polynomial coefficients
+        poly_coeffs = np.poly1d(complex_arr).coeffs.real
+        # calculate the zeros, poles, and gain of the filter
+        self.zeros_complex, self.poles_complex, gain = tf2zpk([1], poly_coeffs)
+        # self.zeros_complex = 1/conjugate_arr
+        # self.poles_complex =complex_arr
+        output=self.apply_filter(inputsignal)
+        return output
 
     # def calculate_filter_coeffs(self):
     #     # Convert the zeros and poles to filter coefficients

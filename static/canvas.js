@@ -165,6 +165,9 @@ function convertToPolarCoordinates() {
   for (let shape of shapes) {
     let x = ((shape.x - 150) / 150).toFixed(4); // Calculate the center x-coordinate of the shape and round to 2 decimal places
     let y = ((150 - shape.y) / 150).toFixed(4); // Calculate the center y-coordinate of the shape and round to 2 decimal places
+    console.log(" x", x);
+    console.log(" y", y);
+
     // Convert the x and y coordinates to polar coordinates
     const radius = Math.sqrt((x) ** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)
     const angle = Math.atan2(y, x); // Angle in radians
@@ -281,7 +284,33 @@ function plotAllPassFilterResponse() {
 
 document.getElementById('applyPhaseCorrection').addEventListener('click', function() {
   applyAllPassFilter();
+  updateOutputAllpass();
 });
+
+function updateOutputAllpass() {
+    const formData = new FormData();
+    formData.append("filters", listItemArray);
+    formData.append("amplitude", uploadedSignal.y);
+  fetch("/allPassOuput", {
+    method: "POST",
+    body: formData,
+  })
+    .then(function (response) {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Request failed with status " + response.status);
+      }
+    })
+    .then(function (responseData) {
+      console.log("be4",outputSignal);
+      outputSignal = { x: uploadedSignal.x, y: responseData.filteredData };
+      console.log("after", outputSignal);
+      startOutputInterval();
+    });
+  }
+
+
 
 function applyAllPassFilter() {
     const formData = new FormData();
