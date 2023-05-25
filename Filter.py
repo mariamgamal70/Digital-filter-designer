@@ -79,16 +79,15 @@ class Filter:
         return output_signal
 
 
-    def allPass_Filter(self, complex_num_str):
-        complex_number = complex(complex_num_str)
+    def allPass_Filter(self, filters_data):
+        coefficients_complex = [complex(filterdata) for filterdata in filters_data]
         phaseAngles = np.zeros(512)
-        w, h = signal.freqz(
-        [-np.conj(complex_number), 1.0], [1.0, -complex_number])
-        angles = np.zeros(512) if complex_number == 1 else np.unwrap(np.angle(h))
+        w, h = signal.freqz([-np.conj(c) for c in coefficients_complex], [1.0] + [-c for c in coefficients_complex])
+        angles = np.zeros(512) if coefficients_complex == 1 else np.unwrap(np.angle(h))
         phaseAngles = np.add(phaseAngles, angles)
-        # self.frequencies = w / max(w)
+        self.frequencies = w / max(w)
         self.allPassResponse = phaseAngles
-        self.resultAllPassFilter = np.add(self.allPassResponse, self.phase)
+        self.resultAllPassFilter = np.add(self.allPassResponse, self.phase, out=np.empty_like(self.allPassResponse), casting='unsafe')
         response ={
             'correctedphase': self.resultAllPassFilter
         }
