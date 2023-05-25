@@ -262,6 +262,7 @@ function plotAllPassFilterResponse() {
       return response.json();
     })
     .then((data) => {
+      console.log(data);
       const allPassResponseTrace = {
         x: data.frequency,
         y: data.allpassresponse,
@@ -284,25 +285,26 @@ document.getElementById('applyPhaseCorrection').addEventListener('click', functi
 });
 
 function applyAllPassFilter() {
-  const filters = listItemArray.map(filter => {
-    return { filter: filter };
-  });
-
-  fetch('/allPass', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(filters)
+  // console.log(listItemArray);
+  // const filters = listItemArray.map(filter => {
+  //   return { filter: filter };
+  // });
+  // console.log(filters)
+    const formData = new FormData();
+    formData.append("filters", listItemArray);
+  fetch("/allPass", {
+    method: "POST",
+    body: formData
   })
     .then(function (response) {
       if (response.ok) {
         return response.json();
       } else {
-        throw new Error('Request failed with status ' + response.status);
+        throw new Error("Request failed with status " + response.status);
       }
     })
     .then(function (responseData) {
+      console.log(responseData)
       // const frequency = responseData.frequency;
       // const phase = responseData.phase;
       // const totalPhase = responseData.total_phase;
@@ -322,7 +324,7 @@ function applyAllPassFilter() {
       }
     })
     .catch(function (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Handle any error that occurred during the request
     });
 }

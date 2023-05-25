@@ -68,18 +68,15 @@ def apply_filter_route():
 
 @app.route('/allPass', methods=['POST'])
 def applyAllPass():
-        filters_data = request.json  # Assuming the request data is in JSON format
-        coefficients = [complex(filter_data) for filter_data in filters_data]
-
-        filters = Filter()
-        filters.allPass_Filter(coefficients)
-
+        filters_data = request.form.getlist("filters")
+        filter_strings = [item.strip() for item in filters_data[0].split(",")]
+        # coefficients = [complex(filter_data) for filter_data in filters_data]
+        filters.allPass_Filter(filter_strings)
         response_data = {
             'frequency': list(filters.frequencies),
             'phase': list(filters.allPassResponse),
             'total_phase': list(filters.resultAllPassFilter)
         }
-
         return jsonify(response_data)
     
 
