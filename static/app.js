@@ -201,7 +201,6 @@ uploadSignal.addEventListener("change", (event) => {
 async function applyFilter() {
   const formData = new FormData();
   formData.append("amplitude", uploadedSignal.y);
-
   const response = await fetch("/applyFilter", {
     method: "POST",
     body: formData,
@@ -210,11 +209,8 @@ async function applyFilter() {
   if (!response.ok) {
     throw new Error("Filter failed");
   }
-
   const data = await response.json();
-
   outputSignal = { x: uploadedSignal.x, y: data.filteredData };
-
   if (outputSignalGraph.data.length == 0) {
     Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
   }
@@ -256,6 +252,7 @@ function handleDropdownItemClick(event) {
     document.getElementById('selectedItemsCard').style.display = 'block';
   }
   plotAllPassFilterResponse();
+  applyAllPassFilter();
 }
 
 function handleCustomizeOptionClick(event) {
@@ -302,6 +299,7 @@ function handleAddButtonClick(event) {
     alert('Invalid custom value. Please enter a value in the form x+yj.');
   }
   plotAllPassFilterResponse();
+  applyAllPassFilter();
 }
 
 
@@ -323,10 +321,10 @@ function handleDeleteButtonClick() {
 
     // Remove the corresponding item from the array
     listItemArray.pop();
-    Plotly.deleteTraces(allPassResponse);
-    
+    Plotly.deleteTraces(allPassResponse,0);
+    plotAllPassFilterResponse();
+    applyAllPassFilter();
   }
-
 }
 
 
@@ -344,8 +342,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var deleteButton = document.querySelector('#deleteButton');
   deleteButton.addEventListener('click', handleDeleteButtonClick);
-
-
 });
 
 document.getElementById('img1').addEventListener('click', function () {
@@ -364,68 +360,3 @@ document.getElementById('img4').addEventListener('click', function () {
   document.getElementById('customInputContainer').value = '0.5-0.94j';
   document.getElementById('customInputContainer').style.display = 'block';
 })
-
-// function applyAllPassFilter() {
-//   filters = [];
-//   fetch('/allPass', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(listItemArray)
-//   })
-//     .then(function (response) {
-//       if (response.ok) {
-//         return response.json();
-//       } else {
-//         throw new Error('Request failed with status ' + response.status);
-//       }
-//     })
-//     .then(function (responseData) {
-//       var dict_data = responseData;
-//     })
-//     .catch(function (error) {
-//       console.error('Error:', error);
-//       // Handle any error that occurred during the request
-//     });
-
-// }
-
-
-
-// function plotComplexNumbers() {
-//   const complexNumbers = listItemArray.map((numberString) => {
-//     const strippedString = numberString.replace('j', '');
-//     const parts = strippedString.split('+');
-//     const realPart = parseFloat(parts[0]);
-//     const imaginaryPart = parseFloat(parts[1]);
-//     return math.complex(realPart, imaginaryPart);
-//   });
-
-//   const realParts = complexNumbers.map((number) => number.re);
-//   const imaginaryParts = complexNumbers.map((number) => number.im);
-
-//   const traceReal = {
-//     x: listItemArray,
-//     y: realParts,
-//     name: 'Real Part',
-//     type: 'scatter',
-//   };
-//   const traceImaginary = {
-//     x: listItemArray,
-//     y: imaginaryParts,
-//     name: 'Imaginary Part',
-//     type: 'scatter',
-//   };
-
-//   const data = [traceReal, traceImaginary];
-
-//   //update All pass response in all-pass filter pop-up 
-//   if (allPassResponse.data.length == 0) {
-//     plotly.addTraces(allPassResponse, data);
-//   } else {
-//     plotly.deleteTraces(allPassResponse, 0);
-//     plotly.addTraces(allPassResponse, data);
-//   }
-// }
-

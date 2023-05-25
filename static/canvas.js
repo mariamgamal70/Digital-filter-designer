@@ -248,7 +248,7 @@ function getFrequencyResponse() {
 
 function plotAllPassFilterResponse() {
     const formData = new FormData();
-    const complexNumber = listItemArray[0].toString();
+    const complexNumber = listItemArray[listItemArray.length-1].toString();
     console.log(complexNumber);
     formData.append("complexno", complexNumber);
   fetch("/getAllPass", {
@@ -281,20 +281,14 @@ function plotAllPassFilterResponse() {
 
 document.getElementById('applyPhaseCorrection').addEventListener('click', function() {
   applyAllPassFilter();
-  
 });
 
 function applyAllPassFilter() {
-  // console.log(listItemArray);
-  // const filters = listItemArray.map(filter => {
-  //   return { filter: filter };
-  // });
-  // console.log(filters)
     const formData = new FormData();
     formData.append("filters", listItemArray);
-  fetch("/allPass", {
+  fetch("/allPass_originalPhase", {
     method: "POST",
-    body: formData
+    body: formData,
   })
     .then(function (response) {
       if (response.ok) {
@@ -304,11 +298,6 @@ function applyAllPassFilter() {
       }
     })
     .then(function (responseData) {
-      console.log(responseData)
-      // const frequency = responseData.frequency;
-      // const phase = responseData.phase;
-      // const totalPhase = responseData.total_phase;
-
       const totalPhase = {
         x: responseData.frequency,
         y: responseData.total_phase,

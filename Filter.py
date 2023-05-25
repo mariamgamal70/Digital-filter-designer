@@ -79,7 +79,7 @@ class Filter:
         return output_signal
 
 
-    def allPass_Filter(self, filters_data):
+    def allPass_originalPhase_Filter(self, filters_data):
         coefficients_complex = [complex(filterdata) for filterdata in filters_data]
         phaseAngles = np.zeros(512)
         w, h = signal.freqz([-np.conj(c) for c in coefficients_complex], [1.0] + [-c for c in coefficients_complex])

@@ -50,28 +50,12 @@ def apply_filter_route():
     response = {'filteredData': filtered_data}
     return jsonify(response)
 
-# @app.route('/allPass', methods=['POST', 'GET'])
-# def applyAllPass():
-#     filters = Filter()
-#     filters_data = json.loads(request.data)
-#     coefficients = []
-#     for filter_data in filters_data:
-#         complex_filter = complex(filter_data)
-#         coefficients.append(complex_filter)
-#     filters.allPass_Filter(coefficients)
-#     response_data = json.dumps({
-#         'frequency': list(filters.frequencies),
-#         'phase': list(filters.allPassResponse),
-#         'total phase': list(filters.resultAllPassFilter)
-#     }, indent=None)
-#     return response_data
-
-@app.route('/allPass', methods=['POST'])
-def applyAllPass():
+@app.route('/allPass_originalPhase', methods=['POST'])
+def apply_allPass_originalPhase_Filter():
         filters_data = request.form.getlist("filters")
         filter_strings = [item.strip() for item in filters_data[0].split(",")]
         # coefficients = [complex(filter_data) for filter_data in filters_data]
-        filters.allPass_Filter(filter_strings)
+        filters.allPass_originalPhase_Filter(filter_strings)
         response_data = {
             'frequency': list(filters.frequencies),
             'phase': list(filters.allPassResponse),
@@ -79,8 +63,6 @@ def applyAllPass():
         }
         return jsonify(response_data)
     
-
-
 @app.route('/getAllPass', methods=['POST'])
 def getAllPass():
     complex_num_str = request.form['complexno']
