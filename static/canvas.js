@@ -8,7 +8,6 @@ let unitCircleCanvas = document.getElementById("unitcirclecanva");
 let lastAddedElement = null;
 let zeros = [];
 let poles = [];
-let filterUpdated = false;
 
 let context = unitCircleCanvas.getContext("2d");
 context.beginPath();
@@ -29,7 +28,6 @@ unitCircleCanvas.addEventListener("click", (event) => {
   //client is distance from start of viewport till point clicked in the div
   //rect is the distance from the viewport till the start of the div
   //the difference between them is the distance from the start of div till point clicked
-  applyFilter();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   if (addZeroButton.checked) {
@@ -43,6 +41,7 @@ unitCircleCanvas.addEventListener("click", (event) => {
     conjugateButton.removeEventListener("click", conjugateZeroHandler);
     conjugateButton.addEventListener("click", conjugatePoleHandler);
   }
+  applyFilter();
 });
 
 clearAllButton.addEventListener("click", clearAll);
@@ -67,6 +66,7 @@ function createZero(x, y) {
       canvasContainer.removeChild(zero);
       zeros = zeros.filter((item) => item.element !== zero);
       getFrequencyResponse();
+      applyFilter();
     }
   });
   dragElement(zero);
@@ -86,6 +86,7 @@ function createPole(x, y) {
       canvasContainer.removeChild(pole);
       poles = poles.filter((item) => item.element !== pole);
       getFrequencyResponse();
+      applyFilter();
     }
   });
   dragElement(pole);
@@ -119,6 +120,14 @@ function dragElement(element) {
     pos4 = e.clientY;
     element.style.top = element.offsetTop - pos2 + "px";
     element.style.left = element.offsetLeft - pos1 + "px";
+    console.log("pos1", pos1, "pos2", pos2);
+    console.log("pos3", pos3, "pos4", pos4);
+    console.log(
+      "element.offsetTop",
+      element.offsetTop,
+      "element.offsetLeft",
+      element.offsetLeft
+    );
     // Update the x and y coordinates in the corresponding shape object
     const shapeIndex = zeros.findIndex((item) => item.element === element);
     if (shapeIndex !== -1) {
@@ -163,8 +172,8 @@ function clearAll() {
 function convertToPolarCoordinates() {
   const shapes = [...zeros, ...poles]; // Combine zeros and poles into a single array
   for (let shape of shapes) {
-    let x = ((shape.x - 150) / 150).toFixed(4); // Calculate the center x-coordinate of the shape and round to 2 decimal places
-    let y = ((150 - shape.y) / 150).toFixed(4); // Calculate the center y-coordinate of the shape and round to 2 decimal places
+    let x = ((shape.x - 150) / 150).toFixed(1); // Calculate the center x-coordinate of the shape and round to 2 decimal places
+    let y = ((150-shape.y) / 150).toFixed(1); // Calculate the center y-coordinate of the shape and round to 2 decimal places
     console.log(" x", x);
     console.log(" y", y);
 
@@ -176,6 +185,7 @@ function convertToPolarCoordinates() {
     shape.angle = angle;
   }
 }
+
 function convertPolarToComplex() {
   let realZeros = zeros.map(zero => zero.radius * Math.cos(zero.angle));
   let realPoles = poles.map(pole => pole.radius * Math.cos(pole.angle));
@@ -197,7 +207,6 @@ function getFrequencyResponse() {
   formData.append("realPoles", complexForm.realPoles);
   formData.append("imgZeros", complexForm.imgZeros);
   formData.append("imgPoles", complexForm.imgPoles);
-  filterUpdated = true;
   fetch("/getMagnitudeAndPhase", {
     method: "POST",
     body: formData,

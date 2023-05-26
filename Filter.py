@@ -17,9 +17,9 @@ class Filter:
         self.img_poles_values = []
         self.zeros_complex = []
         self.poles_complex = []
-        self.norm_freq = []
+        self.freq = []
         self.mag = []
-        self.phase = []
+        self.phase = np.zeros(512)
 
     def set_real_poles(self, values):
         # self.real_poles_values=[]
@@ -40,17 +40,15 @@ class Filter:
     def get_magnitude_phase_response(self):
         self.zeros_complex = []
         self.poles_complex = []
-        self.norm_freq = []
+        self.freq = []
         self.mag = []
         self.phase = []
         for real, img in zip(self.real_poles_values, self.img_poles_values):
             if real and img:
-                self.poles_complex.append(complex(float(real), float(img)))
+                self.poles_complex.append(complex(round(float(real), 2), round(float(img), 2)))
         for real, img in zip(self.real_zeros_values, self.img_zeros_values):
             if real and img:
-                self.zeros_complex.append(complex(float(real), float(img)))
-        # zeros_complex.extend([0] * real_zeros_values.tolist().count(0))
-        # poles_complex.extend([0] * real_poles_values.tolist().count(0))
+                self.zeros_complex.append(complex(round(float(real), 2), round(float(img), 2)))
         # Remove pairs of zeros and poles that are at the same location
         for zero in self.zeros_complex:
             if zero in self.poles_complex:
@@ -58,13 +56,13 @@ class Filter:
                 self.poles_complex.remove(zero)
         # Calculate the frequency response using the zeros and poles
         freq, complex_gain = signal.freqz_zpk(
-            self.zeros_complex, self.poles_complex, 1)
-        self.norm_freq = freq / max(freq)
+            self.zeros_complex, self.poles_complex, 1,)
+        self.freq = freq 
         self.mag = 20 * np.log10(np.abs(complex_gain))
         self.phase = np.unwrap(np.angle(complex_gain))
         # Convert the frequency response to two separate arrays for magnitude and phase
         response = {
-            'frequency': np.array(self.norm_freq).tolist(),
+            'frequency': np.array(self.freq).tolist(),
             'magnitude': np.array(self.mag).tolist(),
             'phase': np.array(self.phase).tolist()
         }
@@ -72,10 +70,12 @@ class Filter:
 
     def apply_filter(self, inputsignal):
         # Convert the zeros and poles to filter coefficients
+        print("self.zeros_complex",self.zeros_complex,"self.poles_complex",self.poles_complex)
         num_coeff, deno_coeff = signal.zpk2tf(
             self.zeros_complex, self.poles_complex, 1)
         # Apply the filter
         output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
+        # print(output_signal)
         return output_signal
 
 
@@ -113,19 +113,8 @@ class Filter:
         # convert complex coefficients to real polynomial coefficients
         poly_coeffs = np.poly1d(complex_arr).coeffs.real
         # calculate the zeros, poles, and gain of the filter
-        self.zeros_complex, self.poles_complex, gain = tf2zpk([1], poly_coeffs)
+        self.zeros_complex, self.poles_complex, gain = tf2zpk(poly_coeffs, [1])
         # self.zeros_complex = 1/conjugate_arr
         # self.poles_complex =complex_arr
         output=self.apply_filter(inputsignal)
         return output
-
-    # def calculate_filter_coeffs(self):
-    #     # Convert the zeros and poles to filter coefficients
-    #     zeros = [complex(real, img) for real, img in zip(self.real_zeros_values, self.img_zeros_values)]
-    #     poles = [complex(real, img) for real, img in zip(self.real_poles_values, self.img_poles_values)]
-    #     self.b_coeffs, self.a_coeffs = self.get_filter_coeffs(zeros, poles)
-
-    # def apply_filter(self, data):
-    #     # Apply the filter to the data using the filtfilt function
-    #     filtered_data = signal.filtfilt(self.b_coeffs, self.a_coeffs, data)
-    #     return filtered_data

@@ -165,6 +165,7 @@ function convertCsvToTrace(csvdata) {
   let x = csvdata.map((arrRow) => arrRow.col1);
   let y = csvdata.map((arrRow) => arrRow.col2);
   uploadedSignal = { x: x, y: y };
+  outputSignal = { x: x, y: y };
   // If there are no existing signals, add the uploaded signal as a trace to the plot else add the uploaded signal as a component to the plot
   Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
   startInputInterval();
@@ -173,8 +174,6 @@ function convertCsvToTrace(csvdata) {
 
 // event listener to the file upload input element to trigger when a file is selected
 uploadSignal.addEventListener("change", (event) => {
-  // Set the isUploaded flag to true when a file is selected
-  isUploaded = true;
   // Retrieve the file object from the event target
   const file = event.target.files[0];
   // Create a new file reader instance
