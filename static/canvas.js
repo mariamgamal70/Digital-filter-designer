@@ -191,6 +191,16 @@ function convertPolarToComplex() {
   let realPoles = poles.map(pole => pole.radius * Math.cos(pole.angle));
   let imgZeros = zeros.map(zero => zero.radius * Math.sin(zero.angle));
   let imgPoles = poles.map((pole) => pole.radius * Math.sin(pole.angle));
+  console.log(
+    "realZeros",
+    realZeros,
+    "realPoles",
+    realPoles,
+    "imgZeros",
+    imgZeros,
+    "imgPoles",
+    imgPoles
+  );
   return {
     realZeros: realZeros,
     realPoles: realPoles,

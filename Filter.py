@@ -49,14 +49,14 @@ class Filter:
         for real, img in zip(self.real_zeros_values, self.img_zeros_values):
             if real and img:
                 self.zeros_complex.append(complex(round(float(real), 2), round(float(img), 2)))
-        # Remove pairs of zeros and poles that are at the same location
+        # # Remove pairs of zeros and poles that are at the same location
         for zero in self.zeros_complex:
             if zero in self.poles_complex:
                 self.zeros_complex.remove(zero)
                 self.poles_complex.remove(zero)
         # Calculate the frequency response using the zeros and poles
         freq, complex_gain = signal.freqz_zpk(
-            self.zeros_complex, self.poles_complex, 1,)
+            self.zeros_complex, self.poles_complex, 1)
         self.freq = freq 
         self.mag = 20 * np.log10(np.abs(complex_gain))
         self.phase = np.unwrap(np.angle(complex_gain))
@@ -66,6 +66,7 @@ class Filter:
             'magnitude': np.array(self.mag).tolist(),
             'phase': np.array(self.phase).tolist()
         }
+        print(self.zeros_complex)
         return response
 
     def apply_filter(self, inputsignal):
@@ -74,6 +75,32 @@ class Filter:
         num_coeff, deno_coeff = signal.zpk2tf(
             self.zeros_complex, self.poles_complex, 1)
         # Apply the filter
+        filter_order=max(len(self.zeros_complex), len(self.poles_complex))
+        print(self.zeros_complex)
+        if len(self.zeros_complex)==1 and len(self.poles_complex)==0 :
+            if (self.zeros_complex[0].real>0 ):
+                num_coeff, deno_coeff = signal.butter(4, 3,fs=1000 ,btype='high', analog=False, output='ba')
+                print("highpass")
+            elif (self.zeros_complex[0].real<0 ):
+                num_coeff, deno_coeff = signal.butter(4, 5, fs=1000, btype='low', analog=False, output='ba')
+                print("lowpass")
+            elif self.zeros_complex[0].real==0 and self.zeros_complex[0].imag==1:
+                num_coeff, deno_coeff = signal.iirnotch(5, 3, fs=1000)
+                print("notch")
+        elif len(self.zeros_complex)==0 and len(self.poles_complex)==1:
+            if  self.poles_complex[0].real<0 and self.poles_complex[0].imag==0:
+                num_coeff, deno_coeff = signal.butter(filter_order, 3, btype='high', fs=1000)
+                print("highpass")
+            elif self.poles_complex[0].real>0 and self.poles_complex[0].imag==0:
+                num_coeff, deno_coeff = signal.butter(filter_order, 6, btype='low', fs=1000)
+                print("lowpass")
+        elif len(self.zeros_complex)==2 and len(self.poles_complex)==0:
+            num_coeff, deno_coeff = signal.butter(filter_order, [2, 6], btype='band', fs=1000)
+            print("bandpass")
+        else:
+            num_coeff, deno_coeff = signal.zpk2tf(
+                self.zeros_complex, self.poles_complex, 1)
+        print("else")
         output_signal = signal.lfilter(num_coeff, deno_coeff, inputsignal)
         # print(output_signal)
         return output_signal
