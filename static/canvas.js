@@ -47,20 +47,22 @@ unitCircleCanvas.addEventListener("click", (event) => {
 clearAllButton.addEventListener("click", clearAll);
 
 function conjugatePoleHandler() {
-  createPole(lastAddedElement.x, 300 - lastAddedElement.y);
+  createPole(lastAddedElement.x, 300 - lastAddedElement.y,true);
+  // lastAddedElement.conjugate = true;
 }
 
 function conjugateZeroHandler() {
-  createZero(lastAddedElement.x, 300 - lastAddedElement.y);
+  createZero(lastAddedElement.x, 300 - lastAddedElement.y,true);
+  // lastAddedElement.conjugate = true;
 }
 
-function createZero(x, y) {
+function createZero(x, y,conjugate=false) {
   const zero = document.createElement("div");
   zero.className = "zero";
   zero.style.left = x - 5 + "px";
   zero.style.top = y - 5 + "px";
   canvasContainer.appendChild(zero);
-  zeros.push({ element: zero, x: x, y: y });
+  zeros.push({ element: zero, x: x, y: y, conjugate: conjugate });
   zero.addEventListener("click", () => {
     if (deleteButton.checked) {
       canvasContainer.removeChild(zero);
@@ -74,13 +76,13 @@ function createZero(x, y) {
   getFrequencyResponse();
 }
 
-function createPole(x, y) {
+function createPole(x, y, conjugate = false) {
   const pole = document.createElement("div");
   pole.className = "pole";
   pole.style.left = x - 5 + "px";
   pole.style.top = y - 5 + "px";
   canvasContainer.appendChild(pole);
-  poles.push({ element: pole, x: x, y: y });
+  poles.push({ element: pole, x: x, y: y, conjugate: conjugate });
   pole.addEventListener("click", () => {
     if (deleteButton.checked) {
       canvasContainer.removeChild(pole);
@@ -120,8 +122,6 @@ function dragElement(element) {
     pos4 = e.clientY;
     element.style.top = element.offsetTop - pos2 + "px";
     element.style.left = element.offsetLeft - pos1 + "px";
-    console.log("pos1", pos1, "pos2", pos2);
-    console.log("pos3", pos3, "pos4", pos4);
     console.log(
       "element.offsetTop",
       element.offsetTop,
@@ -133,11 +133,25 @@ function dragElement(element) {
     if (shapeIndex !== -1) {
       zeros[shapeIndex].x = element.offsetLeft;
       zeros[shapeIndex].y = element.offsetTop;
+      if (zeros[shapeIndex + 1] && zeros[shapeIndex + 1].conjugate == true) {
+        zeros[shapeIndex + 1].x = zeros[shapeIndex].x;
+        zeros[shapeIndex + 1].y = 290 - zeros[shapeIndex].y;
+        zeros[shapeIndex + 1].element.style.top =
+          290-zeros[shapeIndex].y  + "px";
+        zeros[shapeIndex + 1].element.style.left = zeros[shapeIndex].x + "px";
+      }
     } else {
       const shapeIndex = poles.findIndex((item) => item.element === element);
       if (shapeIndex !== -1) {
         poles[shapeIndex].x = element.offsetLeft;
         poles[shapeIndex].y = element.offsetTop;
+        if (poles[shapeIndex + 1] && poles[shapeIndex + 1].conjugate == true) {
+          poles[shapeIndex + 1].x = poles[shapeIndex].x;
+          poles[shapeIndex + 1].y = 290 - poles[shapeIndex].y;
+          poles[shapeIndex + 1].element.style.top =
+            290 - poles[shapeIndex].y + "px";
+          poles[shapeIndex + 1].element.style.left = poles[shapeIndex].x + "px";
+        }
       }
     }
     convertToPolarCoordinates();
@@ -166,7 +180,7 @@ function clearAll() {
   Plotly.deleteTraces(magnitudeGraph, 0);
   Plotly.deleteTraces(phaseGraph, 0);
   outputSignal = uploadedSignal;
-  startOutputInterval();
+  // startOutputInterval();
 }
 
 function convertToPolarCoordinates() {
@@ -174,8 +188,8 @@ function convertToPolarCoordinates() {
   for (let shape of shapes) {
     let x = ((shape.x - 150) / 150).toFixed(1); // Calculate the center x-coordinate of the shape and round to 2 decimal places
     let y = ((150-shape.y) / 150).toFixed(1); // Calculate the center y-coordinate of the shape and round to 2 decimal places
-    console.log(" x", x);
-    console.log(" y", y);
+    // console.log(" x", x);
+    // console.log(" y", y);
 
     // Convert the x and y coordinates to polar coordinates
     const radius = Math.sqrt((x) ** 2 + (y) ** 2); // Distance from shape center to circle center (assumed to be 150, 150)

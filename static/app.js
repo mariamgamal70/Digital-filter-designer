@@ -103,6 +103,9 @@ function inputPlotting() {
     inputMinTick = 0;
     inputMaxTick = 0.3;
     clearInterval(inputSignalInterval);
+    Plotly.deleteTraces(inputSignalGraph,0);
+    Plotly.addTraces(inputSignalGraph, { x: [], y: [] });
+    startInputInterval();
   }
 }
 
@@ -132,6 +135,9 @@ function outputPlotting() {
     outputMinTick = 0;
     outputMaxTick = 0.3;
     clearInterval(outputSignalInterval);
+    Plotly.deleteTraces(outputSignalGraph, 0);
+    Plotly.addTraces(outputSignalGraph, { x: [], y: [] });
+    startOutputInterval();
   }
 }
 
@@ -215,7 +221,6 @@ async function applyFilter() {
   }
   startOutputInterval();
 }
-
 
 function handleDropdownItemClick(event) {
   event.preventDefault();

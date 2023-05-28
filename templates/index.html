@@ -23,8 +23,7 @@
 <body>
     <header class="bg-primary mb-2 text-light p-1 d-flex justify-content-between">
         <h4 class="d-inline">Digital Filter Designer</h4>
-        <div class="my-3">
-            <!-- <label for="formFile" class="form-label h4">Upload Signal</label> -->
+        <div >
             <input class="form-control" type="file" id="uploadsignal">
         </div>
     </header>
@@ -61,7 +60,7 @@
             <br>
             <div class='d-inline-block w-100'>
                 <input class="w-100" type="range" name="speed" min="0" max="100" step="1" value="50" id="speed" />
-                <span id="rangevalue">0%</span>
+                <span id="rangevalue">50%</span>
             </div>
         </div>
 
@@ -137,23 +136,6 @@
                                 <div class="card mt-4" id="selectedItemsCard" style="width: 18rem; display: none;">
                                     <ul class="list-group list-group-flush" id="selectedItemsList"></ul>
                                 </div>
-
-                                <!-- <ul id="selectedItemsList" class="mt-4"></ul> -->
-                                <!--<label for="dropdown">Select an option:</label>
-                            <select id="dropdown" name="dropdown">
-                              <option value="option1">1+0.5j </option>
-                              <option value="option2">1+1j </option>
-                              <option value="option3">0.5+0.5j </option>
-                              <option value="option4">4+0.5j </option>
-                              <option value="option5">0.5+1j </option>
-                              <option value="option6">0 </option>
-                              <option value="custom">Custom</option>
-                            </select>
-                            
-                            <div id="customInputContainer" style="display: none;">
-                              <label for="customInput">Custom Value:</label>
-                              <input type="text" id="customInput" name="customInput">
-                            </div>-->
                             </div>
                         </div><br><br>
 
@@ -228,79 +210,6 @@
         </div>
         <script src="/static/canvas.js"></script>
         <script src="/static/app.js"></script>
-        <!--<script>
-        $(document).ready(function () {
-            $('.dropdown-menu a.dropdown-item').click(function (e) {
-                e.preventDefault();
-                var selectedItemText = $(this).text();
-                var customInputVisible = $('#customInputContainer').is(':visible');
-
-                if (selectedItemText !== 'Customize') {
-                    var listItem;
-                    if (customInputVisible) {
-                        var customValue = $('#customInputContainer').val();
-                        if (isValidCustomValue(customValue)) {
-                            listItem = $('<li>').text(customValue);
-                            $('#customInputContainer').val('').hide();
-                        } else {
-                            alert('Invalid custom value. Please enter a value in the form x+yj.');
-                        }
-                    } else {
-                        listItem = $('<li>').text(selectedItemText);
-                    }
-
-                    if (listItem && selectedItemText !== 'Customize') {
-                        $('#selectedItemsList').append(listItem);
-                    }
-                }
-            });
-
-            $('.customize-option').click(function (e) {
-                e.preventDefault();
-                $('#customInputContainer').toggle();
-            });
-
-            $('.add-button').click(function (e) {
-                e.preventDefault();
-                var customValue = $('#customInputContainer').val();
-                if (isValidCustomValue(customValue)) {
-                    var listItem = $('<li>').text(customValue);
-                    $('#selectedItemsList').append(listItem);
-                    $('#customInputContainer').val('').hide();
-                } else {
-                    alert('Invalid custom value. Please enter a value in the form x+yj.');
-                }
-            });
-
-            function isValidCustomValue(value) {
-                var pattern = /^[-+]?[\d]+(\.[\d]+)?[+-][\d]+(\.[\d]+)?[j]$/;
-                return pattern.test(value);
-            }
-        });
-        $(document).ready(function () {
-            // Event listener for the delete button
-            $('.delete-button').on('click', function () {
-                // Find the selected item's index and remove it from the list
-                var selectedIndex = $('#selectedItemsList li.active').index();
-                $('#selectedItemsList li.active').remove();
-
-                // If there are remaining items, update the active selection
-                var remainingItems = $('#selectedItemsList li');
-                if (remainingItems.length > 0) {
-                    // Check if the deleted item was the last item
-                    if (selectedIndex === remainingItems.length) {
-                        // If so, select the previous item
-                        remainingItems.eq(selectedIndex - 1).addClass('active');
-                    } else {
-                        // Otherwise, select the next item
-                        remainingItems.eq(selectedIndex).addClass('active');
-                    }
-                }
-            });
-        });
-
-
-    </script>-->
 </body>
 
 </html>
