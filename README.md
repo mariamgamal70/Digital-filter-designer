@@ -39,12 +39,12 @@ master
 
 ### Project Features
 Website has the following feature:-
-> 1.A plot for the z-plane with the unit circle, where the user can place different zeros and poles. The user can also 
+> 1. A plot for the z-plane with the unit circle, where the user can place different zeros and poles. The user can also 
 make the following modifications:
-  -Modify the placed zeros/poles by dragging them:
-  -Click on a zero or pole and delete it
-  -Clear all zeros or clear all poles or clear all
-  -Has the option to add conjugates or not for the complex element
+-Modify the placed zeros/poles by dragging them:
+-Click on a zero or pole and delete it
+-Clear all zeros or clear all poles or clear all
+-Has the option to add conjugates or not for the complex element
 
 > 2.  Visualize the corresponding frequency response for the placed elements (One graph for the magnitude 
 response and another graph for the phase response):
