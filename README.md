@@ -38,18 +38,20 @@ master
 ```
 
 ### Project Features
-Website has the following feature:-
+Website has the following features:
 > 1. A plot for the z-plane with the unit circle, where the user can place different zeros and poles. The user can also 
 make the following modifications:
--Modify the placed zeros/poles by dragging them:
--Click on a zero or pole and delete it
--Clear all zeros or clear all poles or clear all
--Has the option to add conjugates or not for the complex element
+
+- Modify the placed zeros/poles by dragging them:
+- Click on a zero or pole and delete it
+- Clear all zeros or clear all poles or clear all
+- Has the option to add conjugates or not for the complex element
 
 > 2.  Visualize the corresponding frequency response for the placed elements (One graph for the magnitude 
 response and another graph for the phase response):
 
 > 3.Upon finishing the filter design and visualizing the filter response, the user should be able to:
+> 
 - Apply the filter on a lengthy signal (minimum of 10,000 points) as if it is a real-time filtering process and visualize the difference between input and output signal.
 
 > 4. Correct for the phase by adding some All-Pass filters through a library of all-pass filter or through a custom-built all-pass that the user can visualize.
